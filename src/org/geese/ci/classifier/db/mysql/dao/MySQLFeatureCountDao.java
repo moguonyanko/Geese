@@ -1,4 +1,4 @@
-package org.geese.ci.classifier.db.dao.mysql;
+package org.geese.ci.classifier.db.mysql.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,7 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.geese.ci.classifier.Feature;
+import org.geese.ci.classifier.db.ClassifierConnection;
 import org.geese.ci.classifier.db.dao.FeatureCountDao;
+import org.geese.ci.classifier.db.mysql.MySQLConnection;
 
 public class MySQLFeatureCountDao extends FeatureCountDao {
 
@@ -18,13 +20,13 @@ public class MySQLFeatureCountDao extends FeatureCountDao {
 	/* The feature and category is primary key. */
 	private static final String SQL_WHERE = " WHERE feature=? AND category=?;";
 
-	public MySQLFeatureCountDao(Connection connection) {
+	public MySQLFeatureCountDao(ClassifierConnection connection) {
 		super(connection);
 	}
 
 	public boolean insert(Feature feature) throws SQLException {
 		boolean result = false;
-		Connection con = getConnection();
+		MySQLConnection con = (MySQLConnection)getConnection();
 
 		try (PreparedStatement ps = con.prepareStatement(SQL_INSERT)) {
 			ps.setString(1, feature.getWord());
@@ -40,7 +42,7 @@ public class MySQLFeatureCountDao extends FeatureCountDao {
 
 	public double select(Feature feature) throws SQLException {
 		double count = 0;
-		Connection con = getConnection();
+		MySQLConnection con = (MySQLConnection)getConnection();
 
 		try (PreparedStatement ps = con.prepareStatement(SQL_SELECT + SQL_WHERE)) {
 			ps.setString(1, feature.getWord());
@@ -62,7 +64,7 @@ public class MySQLFeatureCountDao extends FeatureCountDao {
 
 	public int update(double count, Feature feature) throws SQLException {
 		int effectCount = 0;
-		Connection con = getConnection();
+		MySQLConnection con = (MySQLConnection)getConnection();
 
 		try (PreparedStatement ps = con.prepareStatement(SQL_UPDATE + SQL_WHERE)) {
 			ps.setDouble(1, count);

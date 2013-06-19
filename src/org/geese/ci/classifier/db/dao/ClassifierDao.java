@@ -1,16 +1,16 @@
 package org.geese.ci.classifier.db.dao;
 
-import java.sql.Connection;
+import org.geese.ci.classifier.db.ClassifierConnection;
 
 public abstract class ClassifierDao {
 
-	private final Connection connection;
+	private final ClassifierConnection connection;
 
-	public ClassifierDao(Connection connection) {
+	public ClassifierDao(ClassifierConnection connection) {
 		this.connection = connection;
 	}
 
-	public Connection getConnection() {
+	public ClassifierConnection getConnection() {
 		return connection;
 	}
 	

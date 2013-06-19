@@ -1,8 +1,10 @@
-package org.geese.ci.classifier.db;
+package org.geese.ci.classifier.db.mysql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import org.geese.ci.classifier.db.ClassifierConnection;
+import org.geese.ci.classifier.db.DBAccess;
 
 import org.geese.ci.classifier.util.ConfigUtil;
 
@@ -10,7 +12,7 @@ import org.geese.ci.classifier.util.ConfigUtil;
  * RDBMS Access data.
  *
  */
-public enum MySQLDBAccess implements DBAccess {
+public enum MySQLAccess implements DBAccess {
 
 	DBACCESS;
 	
@@ -20,7 +22,7 @@ public enum MySQLDBAccess implements DBAccess {
 
 	private final String DBNAME = "MySQL";
 	
-	MySQLDBAccess() {
+	private MySQLAccess() {
 		String name = ConfigUtil.getValue("db.name");
 		String host = ConfigUtil.getValue("db.host");
 		String port = ConfigUtil.getValue("db.port");
@@ -37,11 +39,12 @@ public enum MySQLDBAccess implements DBAccess {
 	}
 
 	@Override
-	public Connection connect() throws SQLException {
+	public ClassifierConnection connect() throws SQLException {
 		Connection con = DriverManager.getConnection(jdbcUrl, userId, password);
-		con.setAutoCommit(false);
+		ClassifierConnection cc = new MySQLConnection(con);
+		cc.startTransaction();
 
-		return con;
+		return cc;
 	}
 
 	@Override

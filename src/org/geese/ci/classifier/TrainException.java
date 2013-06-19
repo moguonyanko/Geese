@@ -1,8 +1,8 @@
 package org.geese.ci.classifier;
 
-import java.sql.SQLException;
+import java.sql.SQLRecoverableException;
 
-public class TrainException extends SQLException{
+public class TrainException extends SQLRecoverableException{
 
 	private final String errorWord;
 	private final String errorCategory;

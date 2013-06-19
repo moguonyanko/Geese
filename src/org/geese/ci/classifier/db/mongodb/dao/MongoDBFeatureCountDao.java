@@ -1,13 +1,14 @@
-package org.geese.ci.classifier.db.dao.mongodb;
+package org.geese.ci.classifier.db.mongodb.dao;
 
-import java.sql.Connection;
 import java.sql.SQLException;
+
 import org.geese.ci.classifier.Feature;
+import org.geese.ci.classifier.db.ClassifierConnection;
 import org.geese.ci.classifier.db.dao.FeatureCountDao;
 
 public class MongoDBFeatureCountDao extends FeatureCountDao{
 
-	public MongoDBFeatureCountDao(Connection connection){
+	public MongoDBFeatureCountDao(ClassifierConnection connection){
 		super(connection);
 	}
 

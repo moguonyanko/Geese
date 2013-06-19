@@ -1,9 +1,9 @@
 package org.geese.ci.classifier;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
 
+import org.geese.ci.classifier.db.ClassifierConnection;
 import org.geese.ci.classifier.db.DBAccess;
 import org.geese.ci.classifier.db.DBAccessFactory;
 import org.geese.ci.classifier.db.dao.DaoFactory;
@@ -41,7 +41,7 @@ public abstract class AbstractTransactionClassifier implements TransactionClassi
 	final Map<String, Double> thresholds = new HashMap<>();
 	
 	private final String DBTYPE = ConfigUtil.getValue("db.name");
-	private Connection con;
+	private ClassifierConnection con;
 
 	public AbstractTransactionClassifier(WordFilterTask task){
 		this(task, "unknown");
@@ -181,7 +181,7 @@ public abstract class AbstractTransactionClassifier implements TransactionClassi
 
 	@Override
 	public void end(boolean fail){
-		try(Connection _con = con){
+		try(ClassifierConnection _con = con){
 			if(!fail){
 				_con.commit();
 				LogUtil.info("Classfier finished.");
