@@ -42,7 +42,6 @@ public enum MySQLAccess implements DBAccess {
 	public ClassifierConnection connect() throws SQLException {
 		Connection con = DriverManager.getConnection(jdbcUrl, userId, password);
 		ClassifierConnection cc = new MySQLConnection(con);
-		cc.startTransaction();
 
 		return cc;
 	}

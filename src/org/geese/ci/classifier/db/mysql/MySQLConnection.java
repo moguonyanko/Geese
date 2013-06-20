@@ -5,9 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import org.geese.ci.classifier.db.ClassifierConnection;
+import org.geese.ci.classifier.db.StatementProvider;
 
 
-public class MySQLConnection implements ClassifierConnection {
+public class MySQLConnection implements ClassifierConnection, StatementProvider {
 
 	private final Connection con;
 
@@ -35,6 +36,7 @@ public class MySQLConnection implements ClassifierConnection {
 		con.rollback();
 	}
 	
+	@Override
 	public PreparedStatement prepareStatement(String sql) throws SQLException{
 		return con.prepareStatement(sql);
 	}
