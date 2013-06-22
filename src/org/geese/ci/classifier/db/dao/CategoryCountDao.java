@@ -7,15 +7,23 @@ import java.util.Set;
 import org.geese.ci.classifier.Category;
 import org.geese.ci.classifier.db.ClassifierConnection;
 
-public abstract class CategoryCountDao extends ClassifierDao{
+public abstract class CategoryCountDao extends ClassifierDao {
+
+	protected static final String TABLE = "categorycount";
+	protected static final String CATEGORY = "category";
+	protected static final String COUNT = "count";
 
 	public CategoryCountDao(ClassifierConnection connection) {
 		super(connection);
 	}
-	
+
 	public abstract boolean insert(Category category) throws SQLException;
+
 	public abstract double select(Category category) throws SQLException;
+
 	public abstract Set<String> findAllCategories() throws SQLException;
+
 	public abstract List<Double> findAllCounts() throws SQLException;
+
 	public abstract int update(double count, Category category) throws SQLException;
 }

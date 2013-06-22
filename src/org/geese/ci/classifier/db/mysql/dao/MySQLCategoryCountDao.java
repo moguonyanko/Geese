@@ -1,6 +1,5 @@
 package org.geese.ci.classifier.db.mysql.dao;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,7 +15,6 @@ import org.geese.ci.classifier.db.mysql.MySQLConnection;
 
 public class MySQLCategoryCountDao extends CategoryCountDao {
 
-	private static final String TABLE = "categorycount";
 	private static final String SQL_INSERT = "INSERT INTO " + TABLE + " VALUES (?,?);";
 	private static final String SQL_SELECT = "SELECT * FROM " + TABLE;
 	private static final String SQL_UPDATE = "UPDATE " + TABLE + " SET count=?";
@@ -28,6 +26,7 @@ public class MySQLCategoryCountDao extends CategoryCountDao {
 		super(connection);
 	}
 
+	@Override
 	public boolean insert(Category category) throws SQLException {
 		boolean result = false;
 		MySQLConnection con = (MySQLConnection)getConnection();
@@ -43,6 +42,7 @@ public class MySQLCategoryCountDao extends CategoryCountDao {
 		return result;
 	}
 
+	@Override
 	public double select(Category category) throws SQLException {
 		double count = 0;
 		MySQLConnection con = (MySQLConnection)getConnection();
@@ -64,6 +64,7 @@ public class MySQLCategoryCountDao extends CategoryCountDao {
 		return count;
 	}
 
+	@Override
 	public Set<String> findAllCategories() throws SQLException {
 		Set<String> result = new HashSet<>();
 		MySQLConnection con = (MySQLConnection)getConnection();
@@ -86,6 +87,7 @@ public class MySQLCategoryCountDao extends CategoryCountDao {
 		return result;
 	}
 
+	@Override
 	public List<Double> findAllCounts() throws SQLException {
 		List<Double> counts = new ArrayList<>();
 		MySQLConnection con = (MySQLConnection)getConnection();
@@ -108,6 +110,7 @@ public class MySQLCategoryCountDao extends CategoryCountDao {
 		return counts;
 	}
 
+	@Override
 	public int update(double count, Category category) throws SQLException {
 		int effectCount = 0;
 		MySQLConnection con = (MySQLConnection)getConnection();

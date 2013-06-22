@@ -22,9 +22,9 @@ public class MongoDBConnection implements ClassifierConnection{
 		String dbName = ConfigUtil.getValue("db.database");
 		db = conn.getDB(dbName);
 		
-		String userId = ConfigUtil.getValue("db.user");
-		String password = ConfigUtil.getValue("db.password");
-		db.authenticate(userId, password.toCharArray());
+		//String userId = ConfigUtil.getValue("db.user");
+		//String password = ConfigUtil.getValue("db.password");
+		//db.authenticate(userId, password.toCharArray());
 	}
 
 	@Override
@@ -41,4 +41,7 @@ public class MongoDBConnection implements ClassifierConnection{
 	public void rollback() throws SQLException {
 	}
 	
+	public DB getDB(){
+		return db;
+	}
 }

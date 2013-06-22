@@ -7,6 +7,11 @@ import org.geese.ci.classifier.db.ClassifierConnection;
 
 public abstract class FeatureCountDao extends ClassifierDao{
 
+	protected static final String TABLE = "featurecount";
+	protected static final String FEATURE = "feature";
+	protected static final String CATEGORY = "category";
+	protected static final String COUNT = "count";
+	
 	public FeatureCountDao(ClassifierConnection connection) {
 		super(connection);
 	}
