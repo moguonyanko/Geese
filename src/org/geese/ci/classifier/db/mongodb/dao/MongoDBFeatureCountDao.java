@@ -4,7 +4,6 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.CommandResult;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 
@@ -38,10 +37,11 @@ public class MongoDBFeatureCountDao extends FeatureCountDao {
 	@Override
 	public double select(Feature feature) {
 		DBCollection dbColl = getDBCollection();
-		DBCursor cursor = dbColl.find();
-
-		if (cursor.hasNext()) {
-			DBObject dbObj = cursor.next();
+		DBObject keys = new BasicDBObject();
+		keys.put(FEATURE, feature.getWord());
+		keys.put(CATEGORY, feature.getCategoryName());
+		DBObject dbObj = dbColl.findOne(keys);
+		if (dbObj != null) {
 			Double count = (Double) dbObj.get(COUNT);
 			return count;
 		} else {
@@ -57,7 +57,7 @@ public class MongoDBFeatureCountDao extends FeatureCountDao {
 		keyObj.put(FEATURE, feature.getWord());
 		keyObj.put(CATEGORY, feature.getCategoryName());
 
-		BasicDBObject newCountObj = new BasicDBObject("$set", count);
+		BasicDBObject newCountObj = new BasicDBObject(COUNT, count);
 
 		WriteResult result = dbColl.insert(keyObj, newCountObj);
 		CommandResult cres = result.getLastError();
