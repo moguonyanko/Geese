@@ -1,6 +1,7 @@
 package test.org.geese.ci.classifier;
 
 import java.util.*;
+import org.geese.ci.classifier.ClassifyException;
 
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
@@ -15,14 +16,14 @@ import org.geese.ci.classifier.filter.WordFilterTask;
 import org.geese.ci.classifier.util.StringUtil;
 import org.geese.ci.classifier.util.TrainUtil;
 
-public class TestDocumentFiltering{
+public class TestDocumentFiltering {
 
 	@BeforeClass
-	public static void beforeSetUp(){
+	public static void beforeSetUp() {
 	}
 
 	@Test
-	public void test_getWords(){
+	public void test_getWords() {
 		String sample = "the quick brown fox jumps over the lazy dog";
 		DocumentFiltering docFilter = new DocumentFiltering();
 		Map<String, Integer> result = docFilter.get(sample);
@@ -30,82 +31,81 @@ public class TestDocumentFiltering{
 	}
 
 	@Test
-	public void test_NaiveBaysClassify(){
+	public void test_NaiveBaysClassify() {
 		WordFilterTask task = new DocumentFiltering();
-		NaiveBays nb = new NaiveBays(task);
+		TransactionClassifier nbClassifier = new NaiveBays(task);
 		boolean isFail = false;
-		try{
-			nb.start();
 
-			TrainUtil.train(nb);
+		String[] results = new String[4];
+		try {
+			nbClassifier.start();
 
-			String result0 = nb.classify("quick rabbit");
-			String result1 = nb.classify("quick money");
+			TrainUtil.train(nbClassifier);
 
-			nb.setThresholds("bad", 3.0);
+			results[0] = nbClassifier.classify("quick rabbit");
+			results[1] = nbClassifier.classify("quick money");
 
-			String result2 = nb.classify("quick money");
+			nbClassifier.setThresholds("bad", 3.0);
 
-			for(int i = 0; i < 10; i++){
-				TrainUtil.train(nb);
+			results[2] = nbClassifier.classify("quick money");
+
+			for (int i = 0; i < 10; i++) {
+				TrainUtil.train(nbClassifier);
 			}
 
-			String result3 = nb.classify("quick money");
-
-			//assertEquals("good", result0);
-			//assertEquals("bad", result1);
-			//assertEquals("unknown", result2);
-			//assertEquals("bad", result3);
-		}catch(TrainException te){
+			results[3] = nbClassifier.classify("quick money");
+		} catch (ClassifyException | TrainException ex) {
 			isFail = true;
-		}finally{
-			nb.end(isFail);
+		} finally {
+			nbClassifier.end(isFail);
 			assertFalse(isFail);
 		}
 	}
 
 	@Test
-	public void test_OnlyClassifierOperation(){
+	public void test_OnlyClassifierOperation() {
 		WordFilterTask task = new DocumentFiltering();
 		TransactionClassifier classifier = new NaiveBays(task);
-		
-		classifier.start();
-		String result = classifier.classify("quick rabbit");
-		classifier.end(false);
-		
-		assertFalse(StringUtil.isNullOrEmpty(result));
+		String result = "";
+		boolean isFail = false;
+		try {
+			classifier.start();
+			result = classifier.classify("quick rabbit");
+			assertNotNull(result);
+			isFail = true;
+		} catch (ClassifyException ce) {
+			assertFalse(StringUtil.isNullOrEmpty(result));
+		} finally {
+			classifier.end(isFail);
+		}
 	}
 
 	@Test
-	public void test_FisherClassify(){
+	public void test_FisherClassify() {
 		WordFilterTask task = new DocumentFiltering();
-		TransactionClassifier fc = new FisherClassifier(task);
+		TransactionClassifier fishClassifier = new FisherClassifier(task);
 		boolean isFail = false;
 
-		try{
-			fc.start();
+		String[] results = new String[4];
+		try {
+			fishClassifier.start();
 
-			TrainUtil.train(fc);
+			TrainUtil.train(fishClassifier);
 
-			String result0 = fc.classify("quick rabbit");
-			String result1 = fc.classify("quick money");
+			results[0] = fishClassifier.classify("quick rabbit");
+			results[1] = fishClassifier.classify("quick money");
 
-			fc.setThresholds("bad", 0.8);
+			fishClassifier.setThresholds("bad", 0.8);
 
-			String result2 = fc.classify("quick money");
+			results[2] = fishClassifier.classify("quick money");
 
-			fc.setThresholds("good", 0.4);
+			fishClassifier.setThresholds("good", 0.4);
 
-			String result3 = fc.classify("quick money");
-
-			//assertEquals("good", result0);
-			//assertEquals("bad", result1);
-			//assertEquals("good", result2);
-			//assertEquals("good", result3);
-		}catch(TrainException te){
+			results[3] = fishClassifier.classify("quick money");
+		} catch (ClassifyException | TrainException ex) {
 			isFail = true;
-		}finally{
-			fc.end(isFail);
+		} finally {
+			fishClassifier.end(isFail);
 			assertFalse(isFail);
 		}
 	}

@@ -1,9 +1,10 @@
 package org.geese.ci.classifier;
 
-public class ClassifyException extends RuntimeException{
+import java.sql.SQLTransientException;
 
-	public ClassifyException(String message){
+public class ClassifyException extends SQLTransientException {
+
+	public ClassifyException(String message) {
 		super(message);
 	}
-	
 }
