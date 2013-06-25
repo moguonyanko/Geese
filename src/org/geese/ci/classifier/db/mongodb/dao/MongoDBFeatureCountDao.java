@@ -59,7 +59,7 @@ public class MongoDBFeatureCountDao extends FeatureCountDao {
 
 		BasicDBObject newCountObj = new BasicDBObject(COUNT, count);
 
-		WriteResult result = dbColl.insert(keyObj, newCountObj);
+		WriteResult result = dbColl.update(keyObj, newCountObj);
 		CommandResult cres = result.getLastError();
 		boolean ok = cres.ok();
 

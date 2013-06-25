@@ -87,13 +87,13 @@ public class MongoDBCategoryCountDao extends CategoryCountDao {
 	@Override
 	public int update(double count, Category category) {
 		DBCollection dbColl = getDBCollection();
-
+		
 		DBObject keyObj = new BasicDBObject();
 		keyObj.put(CATEGORY, category.getName());
 
 		BasicDBObject newCountObj = new BasicDBObject(COUNT, count);
 
-		WriteResult result = dbColl.insert(keyObj, newCountObj);
+		WriteResult result = dbColl.update(keyObj, newCountObj);
 		CommandResult cres = result.getLastError();
 		boolean ok = cres.ok();
 

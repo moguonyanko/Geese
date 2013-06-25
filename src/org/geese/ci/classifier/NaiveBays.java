@@ -76,7 +76,7 @@ public class NaiveBays extends AbstractTransactionClassifier{
 		}
 
 		for(String category : probs.keySet()){
-			if(!category.equals(best)
+			if(!best.equals(category)
 				&& probs.get(category) * getThresholds(best) > probs.get(best)){
 				return defaultClass;
 			}
