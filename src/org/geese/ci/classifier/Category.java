@@ -1,5 +1,7 @@
 package org.geese.ci.classifier;
 
+import java.util.Objects;
+
 public class Category {
 
 	private final String name;
@@ -28,7 +30,9 @@ public class Category {
 
 	@Override
 	public int hashCode() {
-		return name.hashCode()^7;
+		int hash = 7;
+		hash = 89 * hash + Objects.hashCode(this.name);
+		return hash;
 	}
 
 	@Override

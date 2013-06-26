@@ -1,5 +1,7 @@
 package org.geese.ci.classifier;
 
+import java.util.Objects;
+
 public class Feature {
 	private final String word;
 	private final String categoryName;
@@ -34,7 +36,10 @@ public class Feature {
 
 	@Override
 	public int hashCode() {
-		return word.hashCode()^categoryName.hashCode()^7;
+		int hash = 5;
+		hash = 43 * hash + Objects.hashCode(this.word);
+		hash = 43 * hash + Objects.hashCode(this.categoryName);
+		return hash;
 	}
 
 	@Override

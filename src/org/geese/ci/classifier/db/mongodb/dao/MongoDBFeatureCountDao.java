@@ -13,7 +13,9 @@ import org.geese.ci.classifier.db.dao.FeatureCountDao;
 import org.geese.ci.classifier.db.mongodb.MongoDBConnection;
 
 public class MongoDBFeatureCountDao extends FeatureCountDao {
-
+	
+	private static final String OBJECTID = "_id";
+	
 	public MongoDBFeatureCountDao(ClassifierConnection connection) {
 		super(connection);
 	}
@@ -22,12 +24,13 @@ public class MongoDBFeatureCountDao extends FeatureCountDao {
 	public boolean insert(Feature feature) {
 		DBCollection dbColl = getDBCollection();
 
-		DBObject dbObj = new BasicDBObject();
-		dbObj.put(FEATURE, feature.getWord());
-		dbObj.put(CATEGORY, feature.getCategoryName());
-		dbObj.put(COUNT, 1.0);
+		DBObject newValueObj = new BasicDBObject();
+		newValueObj.put(OBJECTID, getObjectId(feature));
+		newValueObj.put(FEATURE, feature.getWord());
+		newValueObj.put(CATEGORY, feature.getCategoryName());
+		newValueObj.put(COUNT, 1.0);
 
-		WriteResult result = dbColl.insert(dbObj);
+		WriteResult result = dbColl.insert(newValueObj);
 		CommandResult cres = result.getLastError();
 		boolean ok = cres.ok();
 
@@ -38,11 +41,10 @@ public class MongoDBFeatureCountDao extends FeatureCountDao {
 	public double select(Feature feature) {
 		DBCollection dbColl = getDBCollection();
 		DBObject keys = new BasicDBObject();
-		keys.put(FEATURE, feature.getWord());
-		keys.put(CATEGORY, feature.getCategoryName());
-		DBObject dbObj = dbColl.findOne(keys);
-		if (dbObj != null) {
-			Double count = (Double) dbObj.get(COUNT);
+		keys.put(OBJECTID, getObjectId(feature));
+		DBObject valueObj = dbColl.findOne(keys);
+		if (valueObj != null) {
+			Double count = (Double) valueObj.get(COUNT);
 			return count;
 		} else {
 			return 0;
@@ -53,13 +55,10 @@ public class MongoDBFeatureCountDao extends FeatureCountDao {
 	public int update(double count, Feature feature) {
 		DBCollection dbColl = getDBCollection();
 
-		DBObject keyObj = new BasicDBObject();
-		keyObj.put(FEATURE, feature.getWord());
-		keyObj.put(CATEGORY, feature.getCategoryName());
+		DBObject keyObj = new BasicDBObject(OBJECTID, getObjectId(feature));
+		DBObject valueObj = new BasicDBObject(COUNT, count);
 
-		BasicDBObject newCountObj = new BasicDBObject(COUNT, count);
-
-		WriteResult result = dbColl.update(keyObj, newCountObj);
+		WriteResult result = dbColl.update(keyObj, valueObj);
 		CommandResult cres = result.getLastError();
 		boolean ok = cres.ok();
 
@@ -72,5 +71,9 @@ public class MongoDBFeatureCountDao extends FeatureCountDao {
 		DB db = mcon.getDB();
 		DBCollection coll = db.getCollection(TABLE);
 		return coll;
+	}
+	
+	private String getObjectId(Feature feature){
+		return feature.hashCode()+ "_" + feature.hashCode();
 	}
 }

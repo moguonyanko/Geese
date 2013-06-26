@@ -20,6 +20,8 @@ import org.geese.ci.classifier.db.mongodb.MongoDBConnection;
 
 public class MongoDBCategoryCountDao extends CategoryCountDao {
 
+	private static final String OBJECTID = "_id";
+	
 	public MongoDBCategoryCountDao(ClassifierConnection connection) {
 		super(connection);
 	}
@@ -28,11 +30,12 @@ public class MongoDBCategoryCountDao extends CategoryCountDao {
 	public boolean insert(Category category) {
 		DBCollection dbColl = getDBCollection();
 
-		DBObject dbObj = new BasicDBObject();
-		dbObj.put(CATEGORY, category.getName());
-		dbObj.put(COUNT, 1.0);
+		DBObject newValueObj = new BasicDBObject();
+		newValueObj.put(OBJECTID, category.hashCode());
+		newValueObj.put(CATEGORY, category.getName());
+		newValueObj.put(COUNT, 1.0);
 
-		WriteResult result = dbColl.insert(dbObj);
+		WriteResult result = dbColl.insert(newValueObj);
 		CommandResult cres = result.getLastError();
 		boolean ok = cres.ok();
 
@@ -43,7 +46,7 @@ public class MongoDBCategoryCountDao extends CategoryCountDao {
 	public double select(Category category) {
 		DBCollection dbColl = getDBCollection();
 
-		DBObject dbObj = dbColl.findOne(new BasicDBObject(CATEGORY, category.getName()));
+		DBObject dbObj = dbColl.findOne(new BasicDBObject(OBJECTID, category.hashCode()));
 		if (dbObj != null) {
 			Double count = (Double) dbObj.get(COUNT);
 			return count;
@@ -89,11 +92,11 @@ public class MongoDBCategoryCountDao extends CategoryCountDao {
 		DBCollection dbColl = getDBCollection();
 		
 		DBObject keyObj = new BasicDBObject();
-		keyObj.put(CATEGORY, category.getName());
+		keyObj.put(OBJECTID, category.hashCode());
 
-		BasicDBObject newCountObj = new BasicDBObject(COUNT, count);
+		BasicDBObject valueObj = new BasicDBObject(COUNT, count);
 
-		WriteResult result = dbColl.update(keyObj, newCountObj);
+		WriteResult result = dbColl.update(keyObj, valueObj);
 		CommandResult cres = result.getLastError();
 		boolean ok = cres.ok();
 
