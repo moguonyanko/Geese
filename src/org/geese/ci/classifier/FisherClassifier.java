@@ -6,7 +6,7 @@ import java.util.*;
 import org.geese.ci.classifier.filter.WordFilterTask;
 import org.geese.ci.classifier.probability.WordProbability;
 
-public class FisherClassifier extends AbstractTransactionClassifier{
+public class FisherClassifier extends AbstractClassifier{
 
 	private static final double DEFAULT_MIN_THRES = 0.0;
 	private final WordProbability cprob = new WordProbability(){

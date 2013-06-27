@@ -5,7 +5,7 @@ import java.util.*;
 
 import org.geese.ci.classifier.filter.WordFilterTask;
 
-public class NaiveBays extends AbstractTransactionClassifier{
+public class NaiveBays extends AbstractClassifier{
 
 	private static final double DEFAULT_THRESHOLDS = 1.0;
 

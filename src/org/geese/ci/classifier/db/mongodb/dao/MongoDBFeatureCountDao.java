@@ -14,8 +14,6 @@ import org.geese.ci.classifier.db.mongodb.MongoDBConnection;
 
 public class MongoDBFeatureCountDao extends FeatureCountDao {
 	
-	private static final String OBJECTID = "_id";
-	
 	public MongoDBFeatureCountDao(ClassifierConnection connection) {
 		super(connection);
 	}
@@ -25,7 +23,7 @@ public class MongoDBFeatureCountDao extends FeatureCountDao {
 		DBCollection dbColl = getDBCollection();
 
 		DBObject newValueObj = new BasicDBObject();
-		newValueObj.put(OBJECTID, getObjectId(feature));
+		newValueObj.put(MongoDBDaoUtil.getObjectIdName(), MongoDBDaoUtil.getObjectId(feature));
 		newValueObj.put(FEATURE, feature.getWord());
 		newValueObj.put(CATEGORY, feature.getCategoryName());
 		newValueObj.put(COUNT, 1.0);
@@ -41,7 +39,7 @@ public class MongoDBFeatureCountDao extends FeatureCountDao {
 	public double select(Feature feature) {
 		DBCollection dbColl = getDBCollection();
 		DBObject keys = new BasicDBObject();
-		keys.put(OBJECTID, getObjectId(feature));
+		keys.put(MongoDBDaoUtil.getObjectIdName(), MongoDBDaoUtil.getObjectId(feature));
 		DBObject valueObj = dbColl.findOne(keys);
 		if (valueObj != null) {
 			Double count = (Double) valueObj.get(COUNT);
@@ -55,7 +53,7 @@ public class MongoDBFeatureCountDao extends FeatureCountDao {
 	public int update(double count, Feature feature) {
 		DBCollection dbColl = getDBCollection();
 
-		DBObject keyObj = new BasicDBObject(OBJECTID, getObjectId(feature));
+		DBObject keyObj = new BasicDBObject(MongoDBDaoUtil.getObjectIdName(), MongoDBDaoUtil.getObjectId(feature));
 		
 		DBObject valueObj = new BasicDBObject();
 		valueObj.put(FEATURE, feature.getWord());
@@ -73,11 +71,7 @@ public class MongoDBFeatureCountDao extends FeatureCountDao {
 		ClassifierConnection con = getConnection();
 		MongoDBConnection mcon = (MongoDBConnection) con; /* @todo modify no cast */
 		DB db = mcon.getDB();
-		DBCollection coll = db.getCollection(TABLE);
+		DBCollection coll = db.getCollection(STORE);
 		return coll;
-	}
-	
-	private String getObjectId(Feature feature){
-		return feature.hashCode()+ "_" + feature.hashCode();
 	}
 }

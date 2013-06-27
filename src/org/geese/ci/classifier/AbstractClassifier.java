@@ -14,7 +14,7 @@ import org.geese.ci.classifier.probability.WordProbability;
 import org.geese.ci.classifier.util.ConfigUtil;
 import org.geese.ci.classifier.util.LogUtil;
 
-public abstract class AbstractTransactionClassifier implements TransactionClassifier{
+public abstract class AbstractClassifier implements TransactionClassifier{
 
 	private final static double WEIGHT = 1.0;
 	private final static double AP = 0.5;
@@ -43,11 +43,11 @@ public abstract class AbstractTransactionClassifier implements TransactionClassi
 	private final String DBTYPE = ConfigUtil.getValue("db.name");
 	private ClassifierConnection con;
 
-	public AbstractTransactionClassifier(WordFilterTask task){
+	public AbstractClassifier(WordFilterTask task){
 		this(task, "unknown");
 	}
 
-	public AbstractTransactionClassifier(WordFilterTask task, String defaultClass){
+	public AbstractClassifier(WordFilterTask task, String defaultClass){
 		this.task = task;
 		this.defaultClass = defaultClass;
 	}

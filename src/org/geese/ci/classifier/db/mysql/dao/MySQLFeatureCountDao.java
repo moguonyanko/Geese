@@ -11,10 +11,10 @@ import org.geese.ci.classifier.db.mysql.MySQLConnection;
 
 public class MySQLFeatureCountDao extends FeatureCountDao {
 	
-	private static final String SQL_INSERT = "INSERT INTO " + TABLE + " VALUES (?,?,?);";
-	private static final String SQL_SELECT = "SELECT * FROM " + TABLE;
-	private static final String SQL_UPDATE = "UPDATE " + TABLE + " SET count=?";
-	private static final String SQL_DELETE = "DELETE FROM " + TABLE;
+	private static final String SQL_INSERT = "INSERT INTO " + STORE + " VALUES (?,?,?);";
+	private static final String SQL_SELECT = "SELECT * FROM " + STORE;
+	private static final String SQL_UPDATE = "UPDATE " + STORE + " SET count=?";
+	private static final String SQL_DELETE = "DELETE FROM " + STORE;
 	/* The feature and category is primary key. */
 	private static final String SQL_WHERE = " WHERE feature=? AND category=?;";
 

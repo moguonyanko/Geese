@@ -5,7 +5,7 @@ import org.geese.ci.classifier.db.ClassifierConnection;
 public abstract class ClassifierDao {
 
 	private final ClassifierConnection connection;
-
+	
 	public ClassifierDao(ClassifierConnection connection) {
 		this.connection = connection;
 	}

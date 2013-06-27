@@ -9,7 +9,7 @@ import org.geese.ci.classifier.db.ClassifierConnection;
 
 public abstract class CategoryCountDao extends ClassifierDao {
 
-	protected static final String TABLE = "categorycount";
+	protected static final String STORE = "categorycount";
 	protected static final String CATEGORY = "category";
 	protected static final String COUNT = "count";
 
