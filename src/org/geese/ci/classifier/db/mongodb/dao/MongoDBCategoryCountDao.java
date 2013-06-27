@@ -18,16 +18,16 @@ import org.geese.ci.classifier.db.ClassifierConnection;
 import org.geese.ci.classifier.db.dao.CategoryCountDao;
 import org.geese.ci.classifier.db.mongodb.MongoDBConnection;
 
-public class MongoDBCategoryCountDao extends CategoryCountDao {
+public class MongoDBCategoryCountDao extends CategoryCountDao{
 
 	private static final String OBJECTID = "_id";
-	
-	public MongoDBCategoryCountDao(ClassifierConnection connection) {
+
+	public MongoDBCategoryCountDao(ClassifierConnection connection){
 		super(connection);
 	}
 
 	@Override
-	public boolean insert(Category category) {
+	public boolean insert(Category category){
 		DBCollection dbColl = getDBCollection();
 
 		DBObject newValueObj = new BasicDBObject();
@@ -43,27 +43,27 @@ public class MongoDBCategoryCountDao extends CategoryCountDao {
 	}
 
 	@Override
-	public double select(Category category) {
+	public double select(Category category){
 		DBCollection dbColl = getDBCollection();
 
 		DBObject dbObj = dbColl.findOne(new BasicDBObject(OBJECTID, category.hashCode()));
-		if (dbObj != null) {
-			Double count = (Double) dbObj.get(COUNT);
+		if(dbObj != null){
+			Double count = (Double)dbObj.get(COUNT);
 			return count;
-		} else {
+		}else{
 			return 0;
 		}
 	}
 
 	@Override
-	public Set<String> findAllCategories() {
+	public Set<String> findAllCategories(){
 		Set<String> categories = new HashSet<>();
 
 		DBCollection dbColl = getDBCollection();
-		try (DBCursor cursor = dbColl.find()) {
-			if (cursor.hasNext()) {
+		try(DBCursor cursor = dbColl.find()){
+			if(cursor.hasNext()){
 				DBObject obj = cursor.next();
-				String category = (String) obj.get(CATEGORY);
+				String category = (String)obj.get(CATEGORY);
 				categories.add(category);
 			}
 		}
@@ -72,14 +72,14 @@ public class MongoDBCategoryCountDao extends CategoryCountDao {
 	}
 
 	@Override
-	public List<Double> findAllCounts() {
+	public List<Double> findAllCounts(){
 		List<Double> counts = new ArrayList<>();
 
 		DBCollection dbColl = getDBCollection();
-		try (DBCursor cursor = dbColl.find()) {
-			if (cursor.hasNext()) {
+		try(DBCursor cursor = dbColl.find()){
+			if(cursor.hasNext()){
 				DBObject obj = cursor.next();
-				Double count = (Double) obj.get(COUNT);
+				Double count = (Double)obj.get(COUNT);
 				counts.add(count);
 			}
 		}
@@ -88,13 +88,15 @@ public class MongoDBCategoryCountDao extends CategoryCountDao {
 	}
 
 	@Override
-	public int update(double count, Category category) {
+	public int update(double count, Category category){
 		DBCollection dbColl = getDBCollection();
-		
+
 		DBObject keyObj = new BasicDBObject();
 		keyObj.put(OBJECTID, category.hashCode());
 
-		BasicDBObject valueObj = new BasicDBObject(COUNT, count);
+		DBObject valueObj = new BasicDBObject();
+		valueObj.put(CATEGORY, category.getName());
+		valueObj.put(COUNT, count);
 
 		WriteResult result = dbColl.update(keyObj, valueObj);
 		CommandResult cres = result.getLastError();
@@ -103,9 +105,9 @@ public class MongoDBCategoryCountDao extends CategoryCountDao {
 		return ok ? 1 : 0;
 	}
 
-	private DBCollection getDBCollection() {
+	private DBCollection getDBCollection(){
 		ClassifierConnection con = getConnection();
-		MongoDBConnection mcon = (MongoDBConnection) con; /* @todo modify no cast */
+		MongoDBConnection mcon = (MongoDBConnection)con; /* @todo modify no cast */
 		DB db = mcon.getDB();
 		DBCollection coll = db.getCollection(TABLE);
 		return coll;

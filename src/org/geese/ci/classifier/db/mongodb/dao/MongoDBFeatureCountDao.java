@@ -56,7 +56,11 @@ public class MongoDBFeatureCountDao extends FeatureCountDao {
 		DBCollection dbColl = getDBCollection();
 
 		DBObject keyObj = new BasicDBObject(OBJECTID, getObjectId(feature));
-		DBObject valueObj = new BasicDBObject(COUNT, count);
+		
+		DBObject valueObj = new BasicDBObject();
+		valueObj.put(FEATURE, feature.getWord());
+		valueObj.put(CATEGORY, feature.getCategoryName());
+		valueObj.put(COUNT, count);
 
 		WriteResult result = dbColl.update(keyObj, valueObj);
 		CommandResult cres = result.getLastError();
