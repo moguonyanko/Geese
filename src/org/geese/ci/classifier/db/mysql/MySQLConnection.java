@@ -27,7 +27,7 @@ public class MySQLConnection implements ClassifierConnection, StatementProvider 
 	}
 
 	@Override
-	public void startTransaction() throws SQLException {
+	public void init() throws SQLException {
 		con.setAutoCommit(false);
 	}
 

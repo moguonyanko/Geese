@@ -5,28 +5,41 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.geese.ci.classifier.Feature;
-import org.geese.ci.classifier.db.ClassifierConnection;
+import org.geese.ci.classifier.db.StoreDef;
+import org.geese.ci.classifier.db.StoreElementDef;
 import org.geese.ci.classifier.db.dao.FeatureCountDao;
 import org.geese.ci.classifier.db.mysql.MySQLConnection;
 
-public class MySQLFeatureCountDao extends FeatureCountDao {
-	
-	private static final String SQL_INSERT = "INSERT INTO " + STORE + " VALUES (?,?,?);";
-	private static final String SQL_SELECT = "SELECT * FROM " + STORE;
-	private static final String SQL_UPDATE = "UPDATE " + STORE + " SET count=?";
-	private static final String SQL_DELETE = "DELETE FROM " + STORE;
-	/* The feature and category is primary key. */
-	private static final String SQL_WHERE = " WHERE feature=? AND category=?;";
+public class MySQLFeatureCountDao implements FeatureCountDao {
 
-	public MySQLFeatureCountDao(ClassifierConnection connection) {
-		super(connection);
+	private final MySQLConnection con;
+	private static final String TABLE = StoreDef.FEATURECOUNT.getName();
+	private static final String SQL_INSERT;
+	private static final String SQL_SELECT;
+	private static final String SQL_UPDATE;
+	private static final String SQL_DELETE;
+	/* The feature and category is primary key. */
+	private static final String SQL_WHERE;
+
+	static {
+		String feature = StoreElementDef.FEATURE.getName();
+		String category = StoreElementDef.CATEGORY.getName();
+		String count = StoreElementDef.COUNT.getName();
+		SQL_INSERT = "INSERT INTO " + TABLE + " VALUES (?,?,?);";
+		SQL_SELECT = "SELECT * FROM " + TABLE;
+		SQL_UPDATE = "UPDATE " + TABLE + " SET " + count + "=?";
+		SQL_DELETE = "DELETE FROM " + TABLE;
+		/* The feature and category is primary key. */
+		SQL_WHERE = " WHERE " + feature + "=? AND " + category + "=?;";
+	}
+
+	public MySQLFeatureCountDao(MySQLConnection con) {
+		this.con = con;
 	}
 
 	@Override
 	public boolean insert(Feature feature) throws SQLException {
 		boolean result = false;
-		MySQLConnection con = (MySQLConnection)getConnection(); /* @todo modify no cast */
-
 		try (PreparedStatement ps = con.prepareStatement(SQL_INSERT)) {
 			ps.setString(1, feature.getWord());
 			ps.setString(2, feature.getCategoryName());
@@ -42,7 +55,6 @@ public class MySQLFeatureCountDao extends FeatureCountDao {
 	@Override
 	public double select(Feature feature) throws SQLException {
 		double count = 0;
-		MySQLConnection con = (MySQLConnection)getConnection();
 
 		try (PreparedStatement ps = con.prepareStatement(SQL_SELECT + SQL_WHERE)) {
 			ps.setString(1, feature.getWord());
@@ -65,7 +77,6 @@ public class MySQLFeatureCountDao extends FeatureCountDao {
 	@Override
 	public int update(double count, Feature feature) throws SQLException {
 		int effectCount = 0;
-		MySQLConnection con = (MySQLConnection)getConnection();
 
 		try (PreparedStatement ps = con.prepareStatement(SQL_UPDATE + SQL_WHERE)) {
 			ps.setDouble(1, count);

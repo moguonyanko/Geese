@@ -14,16 +14,24 @@ import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 
 import org.geese.ci.classifier.Category;
-import org.geese.ci.classifier.db.ClassifierConnection;
+import org.geese.ci.classifier.db.StoreDef;
+import org.geese.ci.classifier.db.StoreElementDef;
 import org.geese.ci.classifier.db.dao.CategoryCountDao;
 import org.geese.ci.classifier.db.mongodb.MongoDBConnection;
 
-public class MongoDBCategoryCountDao extends CategoryCountDao{
+public class MongoDBCategoryCountDao implements CategoryCountDao{
 
-	public MongoDBCategoryCountDao(ClassifierConnection connection){
-		super(connection);
+	private final MongoDBConnection con;
+	
+	private static final String COLLECTION_NAME = StoreDef.CATEGORYCOUNT.getName();
+
+	private static final String CATEGORY = StoreElementDef.CATEGORY.getName();
+	private static final String COUNT = StoreElementDef.COUNT.getName();
+	
+	public MongoDBCategoryCountDao(MongoDBConnection con) {
+		this.con = con;
 	}
-
+	
 	@Override
 	public boolean insert(Category category){
 		DBCollection dbColl = getDBCollection();
@@ -105,10 +113,8 @@ public class MongoDBCategoryCountDao extends CategoryCountDao{
 	}
 
 	private DBCollection getDBCollection(){
-		ClassifierConnection con = getConnection();
-		MongoDBConnection mcon = (MongoDBConnection)con; /* @todo modify no cast */
-		DB db = mcon.getDB();
-		DBCollection coll = db.getCollection(STORE);
+		DB db = con.getDB();
+		DBCollection coll = db.getCollection(COLLECTION_NAME);
 		return coll;
 	}
 }

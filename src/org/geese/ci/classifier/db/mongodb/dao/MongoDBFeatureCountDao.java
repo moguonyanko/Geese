@@ -8,14 +8,23 @@ import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 
 import org.geese.ci.classifier.Feature;
-import org.geese.ci.classifier.db.ClassifierConnection;
+import org.geese.ci.classifier.db.StoreDef;
+import org.geese.ci.classifier.db.StoreElementDef;
 import org.geese.ci.classifier.db.dao.FeatureCountDao;
 import org.geese.ci.classifier.db.mongodb.MongoDBConnection;
 
-public class MongoDBFeatureCountDao extends FeatureCountDao {
+public class MongoDBFeatureCountDao implements FeatureCountDao {
 	
-	public MongoDBFeatureCountDao(ClassifierConnection connection) {
-		super(connection);
+	private final MongoDBConnection con;
+	
+	private static final String COLLECTION_NAME = StoreDef.FEATURECOUNT.getName();
+	
+	private static final String FEATURE = StoreElementDef.FEATURE.getName();
+	private static final String CATEGORY = StoreElementDef.CATEGORY.getName();
+	private static final String COUNT = StoreElementDef.COUNT.getName();
+
+	public MongoDBFeatureCountDao(MongoDBConnection con) {
+		this.con = con;
 	}
 
 	@Override
@@ -68,10 +77,8 @@ public class MongoDBFeatureCountDao extends FeatureCountDao {
 	}
 
 	private DBCollection getDBCollection() {
-		ClassifierConnection con = getConnection();
-		MongoDBConnection mcon = (MongoDBConnection) con; /* @todo modify no cast */
-		DB db = mcon.getDB();
-		DBCollection coll = db.getCollection(STORE);
+		DB db = con.getDB();
+		DBCollection coll = db.getCollection(COLLECTION_NAME);
 		return coll;
 	}
 }

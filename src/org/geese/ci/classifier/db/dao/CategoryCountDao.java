@@ -5,25 +5,16 @@ import java.util.List;
 import java.util.Set;
 
 import org.geese.ci.classifier.Category;
-import org.geese.ci.classifier.db.ClassifierConnection;
 
-public abstract class CategoryCountDao extends ClassifierDao {
+public interface CategoryCountDao {
 
-	protected static final String STORE = "categorycount";
-	protected static final String CATEGORY = "category";
-	protected static final String COUNT = "count";
+	boolean insert(Category category) throws SQLException;
 
-	public CategoryCountDao(ClassifierConnection connection) {
-		super(connection);
-	}
+	double select(Category category) throws SQLException;
 
-	public abstract boolean insert(Category category) throws SQLException;
+	Set<String> findAllCategories() throws SQLException;
 
-	public abstract double select(Category category) throws SQLException;
+	List<Double> findAllCounts() throws SQLException;
 
-	public abstract Set<String> findAllCategories() throws SQLException;
-
-	public abstract List<Double> findAllCounts() throws SQLException;
-
-	public abstract int update(double count, Category category) throws SQLException;
+	int update(double count, Category category) throws SQLException;
 }

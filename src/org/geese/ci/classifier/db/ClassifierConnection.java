@@ -4,7 +4,7 @@ import java.sql.SQLException;
 
 public interface ClassifierConnection extends AutoCloseable {
 
-	void startTransaction() throws SQLException;
+	void init() throws SQLException;
 	
 	@Override
 	void close() throws SQLException;

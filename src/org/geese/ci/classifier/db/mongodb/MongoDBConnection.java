@@ -18,7 +18,7 @@ public class MongoDBConnection implements ClassifierConnection{
 	}
 	
 	@Override
-	public void startTransaction() throws SQLException {
+	public void init() throws SQLException {
 		String dbName = ConfigUtil.getValue("db.database");
 		db = conn.getDB(dbName);
 		

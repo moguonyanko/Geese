@@ -65,7 +65,7 @@ public abstract class AbstractClassifier implements TransactionClassifier{
 		try{
 			DBAccess dba = DBAccessFactory.create(DBTYPE);
 			con = dba.connect();
-			con.startTransaction();
+			con.init();
 		}catch(SQLException ex){
 			LogUtil.error("Fail to get connection. : " + ex.getMessage());
 		}
