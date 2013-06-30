@@ -1,9 +1,8 @@
-package org.geese.ci.classifier.util;
+package org.geese.util;
 
-import java.io.IOException;
 import java.util.Properties;
 
-import org.geese.ci.classifier.loader.ConfigLoader;
+import org.geese.loader.ConfigLoader;
 
 public class ConfigUtil {
 	private static final Properties properties = ConfigLoader.load();

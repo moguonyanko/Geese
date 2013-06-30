@@ -1,19 +1,22 @@
 package test.org.geese.ci.classifier;
 
 import java.util.*;
-import org.geese.ci.classifier.ClassifyException;
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import org.geese.ci.classifier.DocumentFiltering;
 import org.geese.ci.classifier.FisherClassifier;
 import org.geese.ci.classifier.NaiveBays;
+import org.geese.ci.classifier.ClassifyException;
 import org.geese.ci.classifier.TrainException;
 import org.geese.ci.classifier.TransactionClassifier;
+import org.geese.ci.classifier.filter.DefaultWordFilter;
+import org.geese.ci.classifier.filter.FilterTaskFactory;
+import org.geese.ci.classifier.filter.WordFilter;
 import org.geese.ci.classifier.filter.WordFilterTask;
-import org.geese.ci.classifier.util.StringUtil;
+import org.geese.ci.classifier.filter.WordFilterTasks;
 import org.geese.ci.classifier.util.TrainUtil;
 
 public class TestDocumentFiltering {
@@ -23,16 +26,8 @@ public class TestDocumentFiltering {
 	}
 
 	@Test
-	public void test_getWords() {
-		String sample = "the quick brown fox jumps over the lazy dog";
-		DocumentFiltering docFilter = new DocumentFiltering();
-		Map<String, Integer> result = docFilter.get(sample);
-		assertTrue(result.get("the") == 2);
-	}
-
-	@Test
 	public void test_NaiveBaysClassify() {
-		WordFilterTask task = new DocumentFiltering();
+		WordFilterTask task = WordFilterTasks.DEFAULT.getTask();
 		TransactionClassifier nbClassifier = new NaiveBays(task);
 		boolean isFail = false;
 
@@ -64,7 +59,7 @@ public class TestDocumentFiltering {
 
 	@Test
 	public void test_OnlyClassifierOperation() {
-		WordFilterTask task = new DocumentFiltering();
+		WordFilterTask task = WordFilterTasks.DEFAULT.getTask();
 		TransactionClassifier classifier = new NaiveBays(task);
 		String result = "";
 		boolean isFail = false;
@@ -72,17 +67,17 @@ public class TestDocumentFiltering {
 			classifier.start();
 			result = classifier.classify("quick rabbit");
 			assertNotNull(result);
-			isFail = true;
 		} catch (ClassifyException ce) {
-			assertFalse(StringUtil.isNullOrEmpty(result));
+			isFail = true;
 		} finally {
 			classifier.end(isFail);
+			assertFalse(isFail);
 		}
 	}
 
 	@Test
 	public void test_FisherClassify() {
-		WordFilterTask task = new DocumentFiltering();
+		WordFilterTask task = WordFilterTasks.DEFAULT.getTask();
 		TransactionClassifier fishClassifier = new FisherClassifier(task);
 		boolean isFail = false;
 
@@ -108,5 +103,44 @@ public class TestDocumentFiltering {
 			fishClassifier.end(isFail);
 			assertFalse(isFail);
 		}
+	}
+
+	@Test
+	public void trainMultiByteSample() {
+		WordFilterTask task = WordFilterTasks.JP.getTask();
+
+		TransactionClassifier nbClassifier = new NaiveBays(task);
+
+		boolean isFail = false;
+
+		try {
+			nbClassifier.start();
+
+			String base = "./test/test/org/geese/ci/classifier/sample";
+
+			String badFilePath = base + "/bad/sample0.txt";
+			TrainUtil.train(nbClassifier, "bad", badFilePath);
+
+			String goodFilePath = base + "/good/sample0.txt";
+			TrainUtil.train(nbClassifier, "good", goodFilePath);
+
+		} catch (TrainException ex) {
+			isFail = true;
+		} finally {
+			nbClassifier.end(isFail);
+			assertFalse(isFail);
+		}
+	}
+
+	@Test
+	public void customFilterTask() {
+		WordFilter customFilter = new DefaultWordFilter();
+		Pattern customSplitter = Pattern.compile("[\\s\\p{Punct}]");
+		WordFilterTask customTask = FilterTaskFactory.createWordFilterTask(customFilter, customSplitter);
+
+		String sample = "the quick brown fox jumps over the lazy dog";
+		Map<String, Integer> result = customTask.get(sample);
+
+		assertTrue(result.get("the") == 2);
 	}
 }

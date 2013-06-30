@@ -5,6 +5,7 @@ import java.util.*;
 
 import org.geese.ci.classifier.filter.WordFilterTask;
 import org.geese.ci.classifier.probability.WordProbability;
+import org.geese.util.LogUtil;
 
 public class FisherClassifier extends AbstractClassifier{
 
@@ -23,7 +24,7 @@ public class FisherClassifier extends AbstractClassifier{
 
 					double fpbs = 1.0;
 
-					for(String catName : getCategories()){
+					for(String catName : getCategorieNames()){
 						fpbs += featureProb(word, catName);
 					}
 
@@ -31,7 +32,8 @@ public class FisherClassifier extends AbstractClassifier{
 				}
 
 			}catch(SQLException sqle){
-				throw new ClassifyException("Misstake calculate prob.");
+				LogUtil.error(sqle);
+				throw new ClassifyException(word, categoryName, "Misstake calculate prob.");
 			}
 		}
 	};
@@ -89,8 +91,10 @@ public class FisherClassifier extends AbstractClassifier{
 		String best = defaultClass;
 		double max = 0.0;
 
+		String nowCategory = null;
 		try{
-			for(String category : getCategories()){
+			for(String category : getCategorieNames()){
+				nowCategory = category;
 				double pb = prob(word, category);
 
 				if(getThresholds(category) < pb && max < pb){
@@ -99,7 +103,8 @@ public class FisherClassifier extends AbstractClassifier{
 				}
 			}
 		}catch(SQLException sqle){
-			throw new ClassifyException("Misstake classify.");
+			LogUtil.error(sqle);
+			throw new ClassifyException(word, nowCategory, "Misstake classify.");
 		}
 
 		return best;

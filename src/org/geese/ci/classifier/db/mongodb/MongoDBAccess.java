@@ -7,7 +7,7 @@ import com.mongodb.Mongo;
 
 import org.geese.ci.classifier.db.ClassifierConnection;
 import org.geese.ci.classifier.db.DBAccess;
-import org.geese.ci.classifier.util.ConfigUtil;
+import org.geese.util.ConfigUtil;
 
 /**
  * NOSQL access data.

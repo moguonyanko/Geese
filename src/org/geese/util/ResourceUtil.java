@@ -1,4 +1,4 @@
-package org.geese.ci.classifier.util;
+package org.geese.util;
 
 import java.sql.Connection;
 import java.sql.SQLException;

@@ -11,8 +11,8 @@ import org.geese.ci.classifier.db.dao.FeatureCountDao;
 import org.geese.ci.classifier.db.dao.CategoryCountDao;
 import org.geese.ci.classifier.filter.WordFilterTask;
 import org.geese.ci.classifier.probability.WordProbability;
-import org.geese.ci.classifier.util.ConfigUtil;
-import org.geese.ci.classifier.util.LogUtil;
+import org.geese.util.ConfigUtil;
+import org.geese.util.LogUtil;
 
 public abstract class AbstractClassifier implements TransactionClassifier{
 
@@ -31,7 +31,8 @@ public abstract class AbstractClassifier implements TransactionClassifier{
 				}
 
 			}catch(SQLException sqle){
-				throw new ClassifyException("Fail to calculate probability.");
+				LogUtil.error(sqle);
+				throw new ClassifyException(word, categoryName, "Fail to calculate probability.");
 			}
 		}
 	};
@@ -53,7 +54,7 @@ public abstract class AbstractClassifier implements TransactionClassifier{
 	}
 
 	/**
-	 * Transaction start.
+	 * Start classifier operation.
 	 * 
 	 * Get connection and start transaction.
 	 * The connection is disabled auto commit mode.
@@ -124,7 +125,7 @@ public abstract class AbstractClassifier implements TransactionClassifier{
 		return total;
 	}
 
-	Set<String> getCategories() throws SQLException{
+	Set<String> getCategorieNames() throws SQLException{
 		CategoryCountDao dao = DaoFactory.createCategoryCountDao(DBTYPE, con);
 		return dao.findAllCategories();
 	}
@@ -143,11 +144,12 @@ public abstract class AbstractClassifier implements TransactionClassifier{
 		double totalFeatureCount = 0.0;
 
 		try{
-			for(String existingCategory : getCategories()){
+			for(String existingCategory : getCategorieNames()){
 				totalFeatureCount += getFeatureCount(word, existingCategory);
 			}
 		}catch(SQLException sqle){
-			throw new ClassifyException("Fail to calculate probabillity.");
+			LogUtil.error(sqle);
+			throw new ClassifyException(word, categoryName, "Fail to calculate probabillity.");
 		}
 
 		double nowProb = probability.prob(word, categoryName);
@@ -168,6 +170,7 @@ public abstract class AbstractClassifier implements TransactionClassifier{
 		String word = null;
 		try{
 			Iterator<String> wordIter = result.keySet().iterator();
+			
 			while(wordIter.hasNext()){
 				word = wordIter.next();
 				incFeatureCount(word, category);
@@ -175,6 +178,7 @@ public abstract class AbstractClassifier implements TransactionClassifier{
 
 			incCategoryCount(category);
 		}catch(SQLException sqle){
+			LogUtil.error(sqle);
 			throw new TrainException(word, category, "Fail training.");
 		}
 
@@ -188,7 +192,7 @@ public abstract class AbstractClassifier implements TransactionClassifier{
 				LogUtil.info("Classfier finished.");
 			}else{
 				_con.rollback();
-				LogUtil.error("Classifier operation failed and rollbacked.");
+				LogUtil.info("Classifier operation failed and rollbacked.");
 			}
 		}catch(SQLException ex){
 			LogUtil.error("Fail to update trainning data and close connection... : " + ex.getMessage());

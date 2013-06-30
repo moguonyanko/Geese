@@ -1,23 +1,29 @@
 package org.geese.ci.classifier;
 
-import java.sql.SQLRecoverableException;
+/**
+ * An exception that provides infomation on a trainning classifier.
+ *
+ */
+public class TrainException extends Exception {
 
-public class TrainException extends SQLRecoverableException{
+	private String errorWord;
+	private String errorCategoryName;
 
-	private final String errorWord;
-	private final String errorCategory;
-
-	public TrainException(String errorWord, String errorCategory, String reason){
+	public TrainException(String errorWord, String errorCategoryName, String reason) {
 		super(reason);
 		this.errorWord = errorWord;
-		this.errorCategory = errorCategory;
+		this.errorCategoryName = errorCategoryName;
 	}
 
-	public final String getErrorWord(){
+	public TrainException(String reason) {
+		super(reason);
+	}
+
+	public final String getErrorWord() {
 		return errorWord;
 	}
 
-	public final String getErrorCategory(){
-		return errorCategory;
+	public final String getErrorCategoryName() {
+		return errorCategoryName;
 	}
 }

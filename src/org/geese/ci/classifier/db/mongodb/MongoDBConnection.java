@@ -6,7 +6,7 @@ import com.mongodb.Mongo;
 import com.mongodb.DB;
 
 import org.geese.ci.classifier.db.ClassifierConnection;
-import org.geese.ci.classifier.util.ConfigUtil;
+import org.geese.util.ConfigUtil;
 
 public class MongoDBConnection implements ClassifierConnection{
 
@@ -35,10 +35,12 @@ public class MongoDBConnection implements ClassifierConnection{
 
 	@Override
 	public void commit() throws SQLException {
+		/* Does nothing now. */
 	}
 
 	@Override
 	public void rollback() throws SQLException {
+		/* Does nothing now. */
 	}
 	
 	public DB getDB(){

@@ -6,8 +6,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.geese.ci.classifier.util.LogUtil;
-import org.geese.ci.classifier.util.StringUtil;
+import org.geese.util.LogUtil;
+import org.geese.util.StringUtil;
 
 public class TestUtilities{
 	

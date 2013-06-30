@@ -1,4 +1,4 @@
-package org.geese.ci.classifier.loader;
+package org.geese.loader;
 
 import java.io.IOException;
 import java.io.InputStream;

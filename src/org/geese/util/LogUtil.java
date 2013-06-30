@@ -1,4 +1,4 @@
-package org.geese.ci.classifier.util;
+package org.geese.util;
 
 import java.util.logging.Logger;
 
@@ -13,6 +13,10 @@ public class LogUtil {
 
 	public static void error(String txt) {
 		logger.severe(txt);
+	}
+
+	public static void error(Throwable t) {
+		logger.severe(t.getMessage());
 	}
 
 	public static void info(String txt) {
