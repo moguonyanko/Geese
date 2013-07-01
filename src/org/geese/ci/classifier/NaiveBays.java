@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 import org.geese.ci.classifier.filter.WordFilterTask;
-import org.geese.util.LogUtil;
+import org.geese.util.Logging;
 
 public class NaiveBays extends AbstractClassifier{
 
@@ -37,7 +37,7 @@ public class NaiveBays extends AbstractClassifier{
 			categoryp = cc / total;
 			docp = docProb(word, categoryName);
 		}catch(SQLException sqle){
-			LogUtil.error(sqle);
+			Logging.error(sqle);
 			throw new ClassifyException(word, categoryName, "Misstake calculate prob.");
 		}
 		
@@ -76,7 +76,7 @@ public class NaiveBays extends AbstractClassifier{
 				}
 			}
 		}catch(SQLException te){
-			LogUtil.error(te);
+			Logging.error(te);
 			throw new ClassifyException(word, nowCategory, "Misstake classify.");
 		}
 

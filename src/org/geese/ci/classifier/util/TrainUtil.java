@@ -1,6 +1,6 @@
 package org.geese.ci.classifier.util;
 
-import org.geese.util.LogUtil;
+import org.geese.util.Logging;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -31,7 +31,7 @@ public class TrainUtil {
 			String sentense = new String(bytes, charset);
 			cl.train(sentense, categoryName);
 		} catch (IOException ex) {
-			LogUtil.error(ex);
+			Logging.error(ex);
 			throw new TrainException(ex.getMessage());
 		}
 	}

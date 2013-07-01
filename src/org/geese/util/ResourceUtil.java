@@ -9,7 +9,7 @@ public class ResourceUtil{
 		try{
 			con.close();
 		}catch(SQLException ex){
-			LogUtil.error("Fail to close database connection." + ex.getMessage());
+			Logging.error("Fail to close database connection." + ex.getMessage());
 		}
 	}
 }

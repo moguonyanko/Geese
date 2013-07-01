@@ -2,13 +2,12 @@ package org.geese.util;
 
 import java.util.logging.Logger;
 
-public class LogUtil {
+public class Logging {
 
 	private static final Logger logger;
 
 	static {
-		String logName = ConfigUtil.getValue("log.name");
-		logger = Logger.getLogger(logName);
+		logger = Logger.getLogger(Logging.class.getName());
 	}
 
 	public static void error(String txt) {

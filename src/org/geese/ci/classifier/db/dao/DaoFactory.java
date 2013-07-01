@@ -18,9 +18,9 @@ public class DaoFactory {
 			throw new IllegalArgumentException("Database name is null.");
 		}
 
-		if (dbName.equalsIgnoreCase(MySQLAccess.DBACCESS.getDBName())) {
+		if (dbName.equalsIgnoreCase(MySQLAccess.DATABASE_NAME)) {
 			return new MySQLFeatureCountDao((MySQLConnection) connection);
-		} else if (dbName.equalsIgnoreCase(MongoDBAccess.DBACCESS.getDBName())) {
+		} else if (dbName.equalsIgnoreCase(MongoDBAccess.DATABASE_NAME)) {
 			return new MongoDBFeatureCountDao((MongoDBConnection) connection);
 		} else {
 			throw new UnsupportedOperationException("Unsupported database type requested.");
@@ -33,9 +33,9 @@ public class DaoFactory {
 			throw new IllegalArgumentException("Database type is null.");
 		}
 
-		if (dbType.equalsIgnoreCase(MySQLAccess.DBACCESS.getDBName())) {
+		if (dbType.equalsIgnoreCase(MySQLAccess.DATABASE_NAME)) {
 			return new MySQLCategoryCountDao((MySQLConnection) connection);
-		} else if (dbType.equalsIgnoreCase(MongoDBAccess.DBACCESS.getDBName())) {
+		} else if (dbType.equalsIgnoreCase(MongoDBAccess.DATABASE_NAME)) {
 			return new MongoDBCategoryCountDao((MongoDBConnection) connection);
 		} else {
 			throw new UnsupportedOperationException("Unsupported database type requested.");

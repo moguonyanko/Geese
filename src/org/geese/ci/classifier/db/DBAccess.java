@@ -5,6 +5,5 @@ import java.sql.SQLException;
 public interface DBAccess {
 
 	ClassifierConnection connect() throws SQLException;
-
-	String getDBName();
+	
 }

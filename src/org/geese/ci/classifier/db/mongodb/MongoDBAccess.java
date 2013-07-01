@@ -7,25 +7,24 @@ import com.mongodb.Mongo;
 
 import org.geese.ci.classifier.db.ClassifierConnection;
 import org.geese.ci.classifier.db.DBAccess;
-import org.geese.util.ConfigUtil;
+import org.geese.config.Profile;
 
 /**
  * NOSQL access data.
  * 
  */
-public enum MongoDBAccess implements DBAccess {
+public class MongoDBAccess implements DBAccess {
 
-	DBACCESS;
-	
-	private final String DBNAME = "MongoDB";
+	public static final String DATABASE_NAME = "MongoDB";
 	
 	private final String hostname;
 	private final int port;
+	private final Profile profile;
 
-	private MongoDBAccess() {
-		hostname = ConfigUtil.getValue("db.host");
-		String _port = ConfigUtil.getValue("db.port");
-		port = Integer.parseInt(_port); /* @todo handle exception */
+	public MongoDBAccess(Profile profile) {
+		this.profile = profile;
+		hostname = profile.getDatabaseHost();
+		port = profile.getDatabasePort();
 	}
 
 	@Override
@@ -39,13 +38,8 @@ public enum MongoDBAccess implements DBAccess {
 			throw new SQLException(ex.getMessage());
 		}
 		
-		ClassifierConnection cc = new MongoDBConnection(con);
+		ClassifierConnection cc = new MongoDBConnection(con, profile);
 		
 		return cc;
-	}
-
-	@Override
-	public String getDBName(){
-		return DBNAME;
 	}
 }

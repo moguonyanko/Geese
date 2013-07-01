@@ -1,6 +1,7 @@
 package org.geese.ci.classifier.db;
 
 import java.sql.SQLException;
+import org.geese.config.Profile;
 
 public interface ClassifierConnection extends AutoCloseable {
 

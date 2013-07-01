@@ -18,6 +18,7 @@ import org.geese.ci.classifier.filter.WordFilter;
 import org.geese.ci.classifier.filter.WordFilterTask;
 import org.geese.ci.classifier.filter.WordFilterTasks;
 import org.geese.ci.classifier.util.TrainUtil;
+import org.geese.config.ProfileInitializeException;
 
 public class TestDocumentFiltering {
 
@@ -49,7 +50,7 @@ public class TestDocumentFiltering {
 			}
 
 			results[3] = nbClassifier.classify("quick money");
-		} catch (ClassifyException | TrainException ex) {
+		} catch (ProfileInitializeException | ClassifyException | TrainException ex) {
 			isFail = true;
 		} finally {
 			nbClassifier.end(isFail);
@@ -67,7 +68,7 @@ public class TestDocumentFiltering {
 			classifier.start();
 			result = classifier.classify("quick rabbit");
 			assertNotNull(result);
-		} catch (ClassifyException ce) {
+		} catch (ProfileInitializeException | ClassifyException ce) {
 			isFail = true;
 		} finally {
 			classifier.end(isFail);
@@ -97,7 +98,7 @@ public class TestDocumentFiltering {
 			fishClassifier.setThresholds("good", 0.4);
 
 			results[3] = fishClassifier.classify("quick money");
-		} catch (ClassifyException | TrainException ex) {
+		} catch (ProfileInitializeException | ClassifyException | TrainException ex) {
 			isFail = true;
 		} finally {
 			fishClassifier.end(isFail);
@@ -124,7 +125,7 @@ public class TestDocumentFiltering {
 			String goodFilePath = base + "/good/sample0.txt";
 			TrainUtil.train(nbClassifier, "good", goodFilePath);
 
-		} catch (TrainException ex) {
+		} catch (ProfileInitializeException | TrainException ex) {
 			isFail = true;
 		} finally {
 			nbClassifier.end(isFail);

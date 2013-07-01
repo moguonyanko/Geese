@@ -11,8 +11,9 @@ import org.geese.ci.classifier.db.dao.FeatureCountDao;
 import org.geese.ci.classifier.db.dao.CategoryCountDao;
 import org.geese.ci.classifier.filter.WordFilterTask;
 import org.geese.ci.classifier.probability.WordProbability;
-import org.geese.util.ConfigUtil;
-import org.geese.util.LogUtil;
+import org.geese.config.Profile;
+import org.geese.config.ProfileInitializeException;
+import org.geese.util.Logging;
 
 public abstract class AbstractClassifier implements TransactionClassifier{
 
@@ -31,7 +32,7 @@ public abstract class AbstractClassifier implements TransactionClassifier{
 				}
 
 			}catch(SQLException sqle){
-				LogUtil.error(sqle);
+				Logging.error(sqle);
 				throw new ClassifyException(word, categoryName, "Fail to calculate probability.");
 			}
 		}
@@ -41,7 +42,8 @@ public abstract class AbstractClassifier implements TransactionClassifier{
 	final String defaultClass;
 	final Map<String, Double> thresholds = new HashMap<>();
 	
-	private final String DBTYPE = ConfigUtil.getValue("db.name");
+	private String dbType;
+	private Profile appProfile;
 	private ClassifierConnection con;
 
 	public AbstractClassifier(WordFilterTask task){
@@ -62,18 +64,20 @@ public abstract class AbstractClassifier implements TransactionClassifier{
 	 * 
 	 */
 	@Override
-	public void start(){
+	public void start() throws ProfileInitializeException{
 		try{
-			DBAccess dba = DBAccessFactory.create(DBTYPE);
+			appProfile = new Profile();
+			dbType = appProfile.getDatabaseTypeName();
+			DBAccess dba = DBAccessFactory.create(appProfile);
 			con = dba.connect();
 			con.init();
 		}catch(SQLException ex){
-			LogUtil.error("Fail to get connection. : " + ex.getMessage());
+			Logging.error("Fail to get connection. : " + ex.getMessage());
 		}
 	}
 
 	private void incFeatureCount(String word, String categoryName) throws SQLException{
-		FeatureCountDao dao = DaoFactory.createFeatureCountDao(DBTYPE, con);
+		FeatureCountDao dao = DaoFactory.createFeatureCountDao(dbType, con);
 		
 		Feature feature = new Feature(word, categoryName);
 		double count = getFeatureCount(word, categoryName);
@@ -86,7 +90,7 @@ public abstract class AbstractClassifier implements TransactionClassifier{
 	}
 
 	private void incCategoryCount(String categoryName) throws SQLException{
-		CategoryCountDao dao = DaoFactory.createCategoryCountDao(DBTYPE, con);
+		CategoryCountDao dao = DaoFactory.createCategoryCountDao(dbType, con);
 		
 		Category category = new Category(categoryName);
 		double count = getCategoryCount(categoryName);
@@ -99,21 +103,21 @@ public abstract class AbstractClassifier implements TransactionClassifier{
 	}
 
 	double getFeatureCount(String word, String categoryName) throws SQLException{
-		FeatureCountDao dao = DaoFactory.createFeatureCountDao(DBTYPE, con);
+		FeatureCountDao dao = DaoFactory.createFeatureCountDao(dbType, con);
 		Feature feature = new Feature(word, categoryName);
 		double count = dao.select(feature);
 		return count;
 	}
 
 	double getCategoryCount(String categoryName) throws SQLException{
-		CategoryCountDao dao = DaoFactory.createCategoryCountDao(DBTYPE, con);
+		CategoryCountDao dao = DaoFactory.createCategoryCountDao(dbType, con);
 		Category category = new Category(categoryName);
 		double count = dao.select(category);
 		return count;
 	}
 
 	double getTotalCategoryCount() throws SQLException{
-		CategoryCountDao dao = DaoFactory.createCategoryCountDao(DBTYPE, con);
+		CategoryCountDao dao = DaoFactory.createCategoryCountDao(dbType, con);
 		List<Double> counts = dao.findAllCounts();
 
 		double total = 0;
@@ -126,7 +130,7 @@ public abstract class AbstractClassifier implements TransactionClassifier{
 	}
 
 	Set<String> getCategorieNames() throws SQLException{
-		CategoryCountDao dao = DaoFactory.createCategoryCountDao(DBTYPE, con);
+		CategoryCountDao dao = DaoFactory.createCategoryCountDao(dbType, con);
 		return dao.findAllCategories();
 	}
 
@@ -148,7 +152,7 @@ public abstract class AbstractClassifier implements TransactionClassifier{
 				totalFeatureCount += getFeatureCount(word, existingCategory);
 			}
 		}catch(SQLException sqle){
-			LogUtil.error(sqle);
+			Logging.error(sqle);
 			throw new ClassifyException(word, categoryName, "Fail to calculate probabillity.");
 		}
 
@@ -178,7 +182,7 @@ public abstract class AbstractClassifier implements TransactionClassifier{
 
 			incCategoryCount(category);
 		}catch(SQLException sqle){
-			LogUtil.error(sqle);
+			Logging.error(sqle);
 			throw new TrainException(word, category, "Fail training.");
 		}
 
@@ -189,13 +193,13 @@ public abstract class AbstractClassifier implements TransactionClassifier{
 		try(ClassifierConnection _con = con){
 			if(!fail){
 				_con.commit();
-				LogUtil.info("Classfier finished.");
+				Logging.info("Classfier finished.");
 			}else{
 				_con.rollback();
-				LogUtil.info("Classifier operation failed and rollbacked.");
+				Logging.info("Classifier operation failed and rollbacked.");
 			}
 		}catch(SQLException ex){
-			LogUtil.error("Fail to update trainning data and close connection... : " + ex.getMessage());
+			Logging.error("Fail to update trainning data and close connection... : " + ex.getMessage());
 		}
 	}
 }

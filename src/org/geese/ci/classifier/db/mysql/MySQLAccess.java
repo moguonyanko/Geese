@@ -6,27 +6,29 @@ import java.sql.SQLException;
 import org.geese.ci.classifier.db.ClassifierConnection;
 import org.geese.ci.classifier.db.DBAccess;
 
-import org.geese.util.ConfigUtil;
+import org.geese.config.Profile;
 
 /**
  * RDBMS Access data.
  *
  */
-public enum MySQLAccess implements DBAccess {
+public class MySQLAccess implements DBAccess {
 
-	DBACCESS;
+	public static final String DATABASE_NAME = "MySQL";
 	
 	private final String jdbcUrl;
 	private final String userId;
 	private final String password;
-
-	private final String DBNAME = "MySQL";
 	
-	private MySQLAccess() {
-		String name = ConfigUtil.getValue("db.name");
-		String host = ConfigUtil.getValue("db.host");
-		String port = ConfigUtil.getValue("db.port");
-		String database = ConfigUtil.getValue("db.database");
+	private final Profile profile;
+
+	public MySQLAccess(Profile profile) {
+		this.profile = profile;
+		
+		String name = profile.getDatabaseTypeName();
+		String host = profile.getDatabaseHost();
+		int port = profile.getDatabasePort();
+		String database = profile.getDatabaseName();
 
 		StringBuilder url = new StringBuilder("jdbc:");
 		url.append(name).append(":").append("//");
@@ -34,20 +36,15 @@ public enum MySQLAccess implements DBAccess {
 		url.append(database);
 		jdbcUrl = url.toString();
 
-		userId = ConfigUtil.getValue("db.user");
-		password = ConfigUtil.getValue("db.password");
+		userId = profile.getDatabaseUserName();
+		password = profile.getDatabaseUserPassword();
 	}
 
 	@Override
 	public ClassifierConnection connect() throws SQLException {
 		Connection con = DriverManager.getConnection(jdbcUrl, userId, password);
-		ClassifierConnection cc = new MySQLConnection(con);
+		ClassifierConnection cc = new MySQLConnection(con, profile);
 
 		return cc;
-	}
-
-	@Override
-	public String getDBName(){
-		return DBNAME;
 	}
 }

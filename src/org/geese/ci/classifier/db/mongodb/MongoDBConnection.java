@@ -6,40 +6,41 @@ import com.mongodb.Mongo;
 import com.mongodb.DB;
 
 import org.geese.ci.classifier.db.ClassifierConnection;
-import org.geese.util.ConfigUtil;
+import org.geese.config.Profile;
 
 public class MongoDBConnection implements ClassifierConnection{
 
 	private final Mongo conn;
-	private DB db;
+	private final DB db;
+	
+	private final Profile profile;
 
-	public MongoDBConnection(Mongo conn) {
+	public MongoDBConnection(Mongo conn, Profile profile) {
 		this.conn = conn;
+		this.profile = profile;
+		String dbName = profile.getDatabaseName();
+		db = conn.getDB(dbName);
 	}
 	
 	@Override
-	public void init() throws SQLException {
-		String dbName = ConfigUtil.getValue("db.database");
-		db = conn.getDB(dbName);
-		
-		//String userId = ConfigUtil.getValue("db.user");
-		//String password = ConfigUtil.getValue("db.password");
+	public void init() {
+		//String userId = profile.getDatabaseUserName();
+		//String password = profile.getDatabaseUserPassword();
 		//db.authenticate(userId, password.toCharArray());
 	}
 
 	@Override
-	public void close() throws SQLException {
-		db = null;
+	public void close() {
 		conn.close();
 	}
 
 	@Override
-	public void commit() throws SQLException {
+	public void commit() {
 		/* Does nothing now. */
 	}
 
 	@Override
-	public void rollback() throws SQLException {
+	public void rollback() {
 		/* Does nothing now. */
 	}
 	

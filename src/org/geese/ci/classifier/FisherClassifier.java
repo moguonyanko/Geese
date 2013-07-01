@@ -5,7 +5,7 @@ import java.util.*;
 
 import org.geese.ci.classifier.filter.WordFilterTask;
 import org.geese.ci.classifier.probability.WordProbability;
-import org.geese.util.LogUtil;
+import org.geese.util.Logging;
 
 public class FisherClassifier extends AbstractClassifier{
 
@@ -32,7 +32,7 @@ public class FisherClassifier extends AbstractClassifier{
 				}
 
 			}catch(SQLException sqle){
-				LogUtil.error(sqle);
+				Logging.error(sqle);
 				throw new ClassifyException(word, categoryName, "Misstake calculate prob.");
 			}
 		}
@@ -103,7 +103,7 @@ public class FisherClassifier extends AbstractClassifier{
 				}
 			}
 		}catch(SQLException sqle){
-			LogUtil.error(sqle);
+			Logging.error(sqle);
 			throw new ClassifyException(word, nowCategory, "Misstake classify.");
 		}
 

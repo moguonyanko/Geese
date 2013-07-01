@@ -6,14 +6,22 @@ import java.sql.SQLException;
 
 import org.geese.ci.classifier.db.ClassifierConnection;
 import org.geese.ci.classifier.db.StatementProvider;
+import org.geese.config.Profile;
 
 
 public class MySQLConnection implements ClassifierConnection, StatementProvider {
 
 	private final Connection con;
+	private final Profile profile;
 
-	public MySQLConnection(Connection con) {
+	public MySQLConnection(Connection con, Profile profile) {
 		this.con = con;
+		this.profile = profile;
+	}
+
+	@Override
+	public void init() throws SQLException {
+		con.setAutoCommit(false);
 	}
 
 	@Override
@@ -24,11 +32,6 @@ public class MySQLConnection implements ClassifierConnection, StatementProvider 
 	@Override
 	public void commit() throws SQLException {
 		con.commit();
-	}
-
-	@Override
-	public void init() throws SQLException {
-		con.setAutoCommit(false);
 	}
 
 	@Override

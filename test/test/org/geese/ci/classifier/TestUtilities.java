@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.geese.util.LogUtil;
+import org.geese.util.Logging;
 import org.geese.util.StringUtil;
 
 public class TestUtilities{
@@ -29,9 +29,9 @@ public class TestUtilities{
 	@Test
 	public void can_output_logging_each_level(){
 		try{
-			LogUtil.info("test info");
-			LogUtil.warn("test warn");
-			LogUtil.error("test error");
+			Logging.info("test info");
+			Logging.warn("test warn");
+			Logging.error("test error");
 		}catch(Exception e){
 			fail();
 		}
