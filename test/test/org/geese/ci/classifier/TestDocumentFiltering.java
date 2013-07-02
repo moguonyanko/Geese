@@ -17,11 +17,13 @@ import org.geese.ci.classifier.filter.FilterTaskFactory;
 import org.geese.ci.classifier.filter.WordFilter;
 import org.geese.ci.classifier.filter.WordFilterTask;
 import org.geese.ci.classifier.filter.WordFilterTasks;
-import org.geese.ci.classifier.util.TrainUtil;
+import org.geese.ci.classifier.Trainer;
 import org.geese.config.ProfileInitializeException;
 
 public class TestDocumentFiltering {
 
+	private static final String PROFILE_PATH = "application.properties";
+	
 	@BeforeClass
 	public static void beforeSetUp() {
 	}
@@ -34,9 +36,9 @@ public class TestDocumentFiltering {
 
 		String[] results = new String[4];
 		try {
-			nbClassifier.start();
+			nbClassifier.start(PROFILE_PATH);
 
-			TrainUtil.train(nbClassifier);
+			Trainer.train(nbClassifier);
 
 			results[0] = nbClassifier.classify("quick rabbit");
 			results[1] = nbClassifier.classify("quick money");
@@ -46,7 +48,7 @@ public class TestDocumentFiltering {
 			results[2] = nbClassifier.classify("quick money");
 
 			for (int i = 0; i < 10; i++) {
-				TrainUtil.train(nbClassifier);
+				Trainer.train(nbClassifier);
 			}
 
 			results[3] = nbClassifier.classify("quick money");
@@ -65,7 +67,7 @@ public class TestDocumentFiltering {
 		String result = "";
 		boolean isFail = false;
 		try {
-			classifier.start();
+			classifier.start(PROFILE_PATH);
 			result = classifier.classify("quick rabbit");
 			assertNotNull(result);
 		} catch (ProfileInitializeException | ClassifyException ce) {
@@ -84,9 +86,9 @@ public class TestDocumentFiltering {
 
 		String[] results = new String[4];
 		try {
-			fishClassifier.start();
+			fishClassifier.start(PROFILE_PATH);
 
-			TrainUtil.train(fishClassifier);
+			Trainer.train(fishClassifier);
 
 			results[0] = fishClassifier.classify("quick rabbit");
 			results[1] = fishClassifier.classify("quick money");
@@ -115,15 +117,15 @@ public class TestDocumentFiltering {
 		boolean isFail = false;
 
 		try {
-			nbClassifier.start();
+			nbClassifier.start(PROFILE_PATH);
 
 			String base = "./test/test/org/geese/ci/classifier/sample";
 
 			String badFilePath = base + "/bad/sample0.txt";
-			TrainUtil.train(nbClassifier, "bad", badFilePath);
+			Trainer.train(nbClassifier, "bad", badFilePath);
 
 			String goodFilePath = base + "/good/sample0.txt";
-			TrainUtil.train(nbClassifier, "good", goodFilePath);
+			Trainer.train(nbClassifier, "good", goodFilePath);
 
 		} catch (ProfileInitializeException | TrainException ex) {
 			isFail = true;

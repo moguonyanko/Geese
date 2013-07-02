@@ -13,7 +13,7 @@ public enum WordFilterTasks {
 			return task;
 		}
 	},
-	JP(Pattern.compile("[「」、。\\s\\p{Punct}]")) {
+	JP(Pattern.compile("[てにをはがのとへやも「」、。\\s\\p{Punct}]")) {
 		@Override
 		public WordFilterTask getTask() {
 			WordFilter multiByteFilter = new JPWordFilter();

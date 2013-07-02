@@ -18,6 +18,6 @@ public class JPWordFilter implements WordFilter {
 			return false;
 		}
 		
-		return true;
+		return doc.length() > 1;
 	}
 }

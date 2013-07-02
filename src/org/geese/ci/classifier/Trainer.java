@@ -1,4 +1,4 @@
-package org.geese.ci.classifier.util;
+package org.geese.ci.classifier;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,10 +9,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.geese.util.Logging;
-import org.geese.ci.classifier.Classifier;
-import org.geese.ci.classifier.TrainException;
 
-public class TrainUtil {
+public class Trainer {
 
 	private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 

@@ -64,9 +64,9 @@ public abstract class AbstractClassifier implements TransactionClassifier{
 	 * 
 	 */
 	@Override
-	public void start() throws ProfileInitializeException{
+	public void start(String configPath) throws ProfileInitializeException{
 		try{
-			appProfile = new Profile();
+			appProfile = new Profile(configPath);
 			dbType = appProfile.getDatabaseTypeName();
 			DBAccess dba = DBAccessFactory.create(appProfile);
 			con = dba.connect();

@@ -5,19 +5,14 @@ import java.util.Properties;
 
 public class Profile {
 
-	private static final String defaultPropPath = "org/geese/config/application.properties";
 	private final Properties properties;
 
-	public Profile(String propPath) throws ProfileInitializeException {
+	public Profile(String configPath) throws ProfileInitializeException {
 		try {
-			properties = PropertiesLoader.load(propPath);
+			properties = PropertiesLoader.load(configPath);
 		} catch (IOException ex) {
-			throw new ProfileInitializeException(propPath, ex);
+			throw new ProfileInitializeException(configPath, ex);
 		}
-	}
-
-	public Profile() throws ProfileInitializeException {
-		this(defaultPropPath);
 	}
 
 	private String getValue(String key) {
