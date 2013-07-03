@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.geese.ci.classifier.FisherClassifier;
 import org.geese.ci.classifier.NaiveBays;
 import org.geese.ci.classifier.ClassifyException;
+import org.geese.ci.classifier.InitializeException;
 import org.geese.ci.classifier.TrainException;
 import org.geese.ci.classifier.TransactionClassifier;
 import org.geese.ci.classifier.filter.DefaultWordFilter;
@@ -18,7 +19,6 @@ import org.geese.ci.classifier.filter.WordFilter;
 import org.geese.ci.classifier.filter.WordFilterTask;
 import org.geese.ci.classifier.filter.WordFilterTasks;
 import org.geese.ci.classifier.Trainer;
-import org.geese.config.ProfileInitializeException;
 
 public class TestDocumentFiltering {
 
@@ -52,7 +52,7 @@ public class TestDocumentFiltering {
 			}
 
 			results[3] = nbClassifier.classify("quick money");
-		} catch (ProfileInitializeException | ClassifyException | TrainException ex) {
+		} catch (InitializeException | ClassifyException | TrainException ex) {
 			isFail = true;
 		} finally {
 			nbClassifier.end(isFail);
@@ -70,7 +70,7 @@ public class TestDocumentFiltering {
 			classifier.start(PROFILE_PATH);
 			result = classifier.classify("quick rabbit");
 			assertNotNull(result);
-		} catch (ProfileInitializeException | ClassifyException ce) {
+		} catch (InitializeException | ClassifyException ce) {
 			isFail = true;
 		} finally {
 			classifier.end(isFail);
@@ -100,7 +100,7 @@ public class TestDocumentFiltering {
 			fishClassifier.setThresholds("good", 0.4);
 
 			results[3] = fishClassifier.classify("quick money");
-		} catch (ProfileInitializeException | ClassifyException | TrainException ex) {
+		} catch (InitializeException | ClassifyException | TrainException ex) {
 			isFail = true;
 		} finally {
 			fishClassifier.end(isFail);
@@ -127,7 +127,7 @@ public class TestDocumentFiltering {
 			String goodFilePath = base + "/good/sample0.txt";
 			Trainer.train(nbClassifier, "good", goodFilePath);
 
-		} catch (ProfileInitializeException | TrainException ex) {
+		} catch (InitializeException | TrainException ex) {
 			isFail = true;
 		} finally {
 			nbClassifier.end(isFail);

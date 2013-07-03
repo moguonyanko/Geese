@@ -1,6 +1,8 @@
 package org.geese.config;
 
-public class ProfileInitializeException extends Exception {
+import org.geese.ci.classifier.InitializeException;
+
+public class ProfileInitializeException extends InitializeException {
 	private final String errorPropertiesPath;
 
 	public ProfileInitializeException(String errorPropPath, Throwable cause) {

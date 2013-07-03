@@ -1,13 +1,13 @@
 package org.geese.ci.classifier.filter;
 
-import org.geese.util.StringUtil;
+import org.geese.util.Strings;
 
 public class DefaultWordFilter implements WordFilter {
 
 	@Override
 	public boolean accept(String doc) {
 		
-		if(StringUtil.isNullOrEmpty(doc)){
+		if(Strings.isNullOrEmpty(doc)){
 			return false;
 		}
 

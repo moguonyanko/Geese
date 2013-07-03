@@ -3,7 +3,7 @@ package org.geese.util;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class ResourceUtil{
+public class Resources{
 
 	public static void close(Connection con){
 		try{

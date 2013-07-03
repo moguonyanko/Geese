@@ -1,7 +1,5 @@
 package org.geese.ci.classifier.db.mongodb;
 
-import java.sql.SQLException;
-
 import com.mongodb.Mongo;
 import com.mongodb.DB;
 

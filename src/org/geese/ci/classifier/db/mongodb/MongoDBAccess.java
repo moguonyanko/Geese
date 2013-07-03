@@ -1,7 +1,10 @@
 package org.geese.ci.classifier.db.mongodb;
 
 import java.net.UnknownHostException;
-import java.sql.SQLException;
+import java.sql.ClientInfoStatus;
+import java.sql.SQLClientInfoException;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.mongodb.Mongo;
 
@@ -28,14 +31,17 @@ public class MongoDBAccess implements DBAccess {
 	}
 
 	@Override
-	public ClassifierConnection connect() throws SQLException {
+	public ClassifierConnection connect() throws SQLClientInfoException {
 		
 		Mongo con;
 		
 		try {
 			con = new Mongo(hostname, port);
 		} catch (UnknownHostException ex) {
-			throw new SQLException(ex.getMessage());
+			String errMsg = "Unknown host[" + hostname + "] or port[" + port + "].";
+			Map<String, ClientInfoStatus> errInfo = new HashMap<>();
+			errInfo.put(errMsg, ClientInfoStatus.REASON_UNKNOWN_PROPERTY);
+			throw new SQLClientInfoException(errMsg, errInfo, ex);
 		}
 		
 		ClassifierConnection cc = new MongoDBConnection(con, profile);
