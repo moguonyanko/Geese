@@ -13,7 +13,6 @@ import org.geese.ci.classifier.db.dao.CategoryCountDao;
 import org.geese.ci.classifier.filter.WordFilterTask;
 import org.geese.ci.classifier.probability.WordProbability;
 import org.geese.config.Profile;
-import org.geese.config.ProfileInitializeException;
 import org.geese.util.Logging;
 
 public abstract class AbstractClassifier implements TransactionClassifier {
@@ -72,8 +71,9 @@ public abstract class AbstractClassifier implements TransactionClassifier {
 			con = dba.connect();
 			con.init();
 		} catch (SQLException ex) {
-			Logging.error(appProfile.getBundle().getString("error.start") + " : " + ex.getMessage());
-			throw new DatabaseInitializeException(ex);
+			Logging.error(appProfile.getBundle().getString("error.start") + " : "
+				+ ex.getMessage());
+			throw new DatabaseInitializeException(dbType, ex);
 		}
 	}
 

@@ -3,9 +3,9 @@ package org.geese.ci.classifier.db.mysql;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
 import org.geese.ci.classifier.db.ClassifierConnection;
 import org.geese.ci.classifier.db.DBAccess;
-
 import org.geese.config.Profile;
 
 /**
@@ -19,12 +19,11 @@ public class MySQLAccess implements DBAccess {
 	private final String jdbcUrl;
 	private final String userId;
 	private final String password;
-	
 	private final Profile profile;
 
 	public MySQLAccess(Profile profile) {
 		this.profile = profile;
-		
+
 		String name = profile.getDatabaseTypeName();
 		String host = profile.getDatabaseHost();
 		int port = profile.getDatabasePort();

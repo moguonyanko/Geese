@@ -4,8 +4,14 @@ import org.geese.ci.classifier.InitializeException;
 
 public class DatabaseInitializeException extends InitializeException{
 
-	public DatabaseInitializeException(Throwable cause) {
+	private final String errorDatabaseName;
+
+	public DatabaseInitializeException(String errorDatabaseName, Throwable cause) {
 		super(cause);
+		this.errorDatabaseName = errorDatabaseName;
 	}
-	
+
+	public String getErrorDatabaseName() {
+		return errorDatabaseName;
+	}
 }
