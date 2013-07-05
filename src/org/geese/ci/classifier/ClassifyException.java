@@ -1,12 +1,10 @@
 package org.geese.ci.classifier;
 
-import java.sql.SQLTransientException;
-
 /**
  * An exception that provides infomation on a classification error.
  * 
  */
-public class ClassifyException extends SQLTransientException {
+public class ClassifyException extends OperateException {
 
 	private final String errorWord;
 	private final String errorCategoryName;

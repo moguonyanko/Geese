@@ -4,7 +4,7 @@ package org.geese.ci.classifier;
  * An exception that provides infomation on a trainning classifier.
  *
  */
-public class TrainException extends Exception {
+public class TrainException extends OperateException {
 
 	private String errorWord;
 	private String errorCategoryName;

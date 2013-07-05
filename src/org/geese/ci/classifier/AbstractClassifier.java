@@ -71,8 +71,7 @@ public abstract class AbstractClassifier implements TransactionClassifier {
 			con = dba.connect();
 			con.init();
 		} catch (SQLException ex) {
-			Logging.error(appProfile.getBundle().getString("error.start") + " : "
-				+ ex.getMessage());
+			Logging.error(appProfile.toLocalize("error.start"), ex);
 			throw new DatabaseInitializeException(dbType, ex);
 		}
 	}

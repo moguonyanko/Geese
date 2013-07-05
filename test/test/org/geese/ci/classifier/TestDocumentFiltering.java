@@ -11,6 +11,7 @@ import org.geese.ci.classifier.FisherClassifier;
 import org.geese.ci.classifier.NaiveBays;
 import org.geese.ci.classifier.ClassifyException;
 import org.geese.ci.classifier.InitializeException;
+import org.geese.ci.classifier.OperateException;
 import org.geese.ci.classifier.TrainException;
 import org.geese.ci.classifier.TransactionClassifier;
 import org.geese.ci.classifier.filter.DefaultWordFilter;
@@ -52,7 +53,7 @@ public class TestDocumentFiltering {
 			}
 
 			results[3] = nbClassifier.classify("quick money");
-		} catch (InitializeException | ClassifyException | TrainException ex) {
+		} catch (InitializeException | OperateException ex) {
 			isFail = true;
 		} finally {
 			nbClassifier.end(isFail);
@@ -100,7 +101,7 @@ public class TestDocumentFiltering {
 			fishClassifier.setThresholds("good", 0.4);
 
 			results[3] = fishClassifier.classify("quick money");
-		} catch (InitializeException | ClassifyException | TrainException ex) {
+		} catch (InitializeException | OperateException ex) {
 			isFail = true;
 		} finally {
 			fishClassifier.end(isFail);

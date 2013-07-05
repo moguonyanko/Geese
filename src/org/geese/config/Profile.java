@@ -3,38 +3,21 @@ package org.geese.config;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.ResourceBundle;
+
 import org.geese.util.Strings;
 
 public class Profile {
 
 	private final Properties props;
-	private final ResourceBundle bundle;
+	private final Localizer localizer;
 
 	public Profile(String configPath) throws ProfileInitializeException {
 		try {
 			props = PropertiesLoader.load(configPath);
-
-			String bundleName = ".localization";
-			String bundlePath = this.getClass().getPackage().getName() + bundleName;
-			String language = props.getProperty("locale.language");
-			String country = props.getProperty("locale.country");
-			Locale bundleLocale;
-
-			if (!Strings.isNullOrEmpty(language) && !Strings.isNullOrEmpty(country)) {
-				bundleLocale = new Locale(language, country);
-			} else {
-				bundleLocale = Locale.getDefault();
-			}
-
-			bundle = ResourceBundle.getBundle(bundlePath, bundleLocale);
+			localizer = new Localizer(getLocale());
 		} catch (IOException ex) {
 			throw new ProfileInitializeException(configPath, ex);
 		}
-	}
-
-	public ResourceBundle getBundle() {
-		return bundle;
 	}
 
 	private String getValue(String key) {
@@ -45,28 +28,46 @@ public class Profile {
 		}
 	}
 
-	public String getDatabaseTypeName() {
+	public final String toLocalize(String key) {
+		return localizer.getString(key);
+	}
+
+	public final Locale getLocale() {
+		String language = getValue("locale.language");
+		String country = getValue("locale.country");
+		Locale bundleLocale;
+
+		if (!Strings.isNullOrEmpty(language) && !Strings.isNullOrEmpty(country)) {
+			bundleLocale = new Locale(language, country);
+		} else {
+			bundleLocale = Locale.getDefault();
+		}
+
+		return bundleLocale;
+	}
+
+	public final String getDatabaseTypeName() {
 		return getValue("db.name");
 	}
 
-	public int getDatabasePort() {
+	public final int getDatabasePort() {
 		String portValue = getValue("db.port");
 		return Integer.parseInt(portValue);
 	}
 
-	public String getDatabaseHost() {
+	public final String getDatabaseHost() {
 		return getValue("db.host");
 	}
 
-	public String getDatabaseName() {
+	public final String getDatabaseName() {
 		return getValue("db.database");
 	}
 
-	public String getDatabaseUserName() {
+	public final String getDatabaseUserName() {
 		return getValue("db.user");
 	}
 
-	public String getDatabaseUserPassword() {
+	public final String getDatabaseUserPassword() {
 		return getValue("db.password");
 	}
 }
