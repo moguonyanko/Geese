@@ -3,6 +3,7 @@ package org.geese.config;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import static java.util.ResourceBundle.Control.TTL_DONT_CACHE;
+
 import org.geese.config.bundle.Localization;
 
 public class Localizer {

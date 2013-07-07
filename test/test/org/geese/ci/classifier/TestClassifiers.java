@@ -73,8 +73,8 @@ public class TestClassifiers {
 		boolean isFail = false;
 		try {
 			classifier.start(CONFIG_FILE_PATH);
-			String target = "quick rabbit";
-			String result = classifier.classify("quick rabbit");
+			String target = "I am Linux user";
+			String result = classifier.classify(target);
 			
 			assertNotNull(result);
 			
@@ -162,7 +162,7 @@ public class TestClassifiers {
 	}
 
 	private void printClassifyResult(String target, String result) {
-		System.out.println("classify "+ target + " to [" + result + "]");
+		System.out.println("classify ["+ target + "] to [" + result + "]");
 	}
 	
 	private void printClassifyResult(String[] targets, String[] results) {

@@ -32,7 +32,7 @@ public class Profile {
 		return localizer.getString(key);
 	}
 
-	public final Locale getLocale() {
+	private Locale getLocale() {
 		String language = getValue("locale.language");
 		String country = getValue("locale.country");
 		Locale bundleLocale;
