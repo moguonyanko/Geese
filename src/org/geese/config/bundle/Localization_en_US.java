@@ -1,4 +1,4 @@
-package org.geese.config;
+package org.geese.config.bundle;
 
 import java.util.ListResourceBundle;
 
