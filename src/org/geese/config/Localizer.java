@@ -7,7 +7,7 @@ import static java.util.ResourceBundle.Control.TTL_DONT_CACHE;
 public class Localizer {
 
 	private final ResourceBundle bundle;
-	private static final String BUNDLE_NAME = "localization";
+	private static final String BUNDLE_NAME = "Localization";
 
 	Localizer(Locale bundleLocale) {
 		String bundlePath = this.getClass().getPackage().getName() + "." + BUNDLE_NAME;

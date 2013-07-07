@@ -6,11 +6,11 @@ import java.util.*;
 import org.geese.ci.classifier.filter.WordFilterTask;
 import org.geese.util.Logging;
 
-public class NaiveBays extends AbstractClassifier{
+public class NaiveBaysClassifier extends AbstractClassifier{
 
 	private static final double DEFAULT_THRESHOLDS = 1.0;
 
-	public NaiveBays(WordFilterTask task){
+	public NaiveBaysClassifier(WordFilterTask task){
 		super(task);
 	}
 

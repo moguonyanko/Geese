@@ -8,7 +8,7 @@ import org.geese.ci.classifier.probability.WordProbability;
 import org.geese.util.Logging;
 
 public class FisherClassifier extends AbstractClassifier{
-
+	
 	private static final double DEFAULT_MIN_THRES = 0.0;
 	private final WordProbability cprob = new WordProbability(){
 		@Override

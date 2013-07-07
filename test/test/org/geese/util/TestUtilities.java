@@ -1,4 +1,4 @@
-package test.org.geese.ci.classifier;
+package test.org.geese.util;
 
 import org.junit.After;
 import org.junit.AfterClass;

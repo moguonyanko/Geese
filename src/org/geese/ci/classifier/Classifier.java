@@ -11,4 +11,6 @@ public interface Classifier {
 	double getThresholds(String categoryName);
 
 	double prob(String word, String categoryName) throws ClassifyException;
+	
+	String getName();
 }

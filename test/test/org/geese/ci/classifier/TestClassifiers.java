@@ -8,7 +8,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import org.geese.ci.classifier.FisherClassifier;
-import org.geese.ci.classifier.NaiveBays;
+import org.geese.ci.classifier.NaiveBaysClassifier;
 import org.geese.ci.classifier.ClassifyException;
 import org.geese.ci.classifier.InitializeException;
 import org.geese.ci.classifier.OperateException;
@@ -21,9 +21,9 @@ import org.geese.ci.classifier.filter.WordFilterTask;
 import org.geese.ci.classifier.filter.WordFilterTasks;
 import org.geese.ci.classifier.Trainer;
 
-public class TestDocumentFiltering {
+public class TestClassifiers {
 
-	private static final String PROFILE_PATH = "application.properties";
+	private static final String CONFIG_FILE_PATH = "application.properties";
 	
 	@BeforeClass
 	public static void beforeSetUp() {
@@ -32,27 +32,32 @@ public class TestDocumentFiltering {
 	@Test
 	public void test_NaiveBaysClassify() {
 		WordFilterTask task = WordFilterTasks.DEFAULT.getTask();
-		TransactionClassifier nbClassifier = new NaiveBays(task);
+		TransactionClassifier nbClassifier = new NaiveBaysClassifier(task);
 		boolean isFail = false;
 
+		String[] targets = new String[]{
+			"quick rabbit", "quick money", "quick money", "quick money"
+		};
 		String[] results = new String[4];
 		try {
-			nbClassifier.start(PROFILE_PATH);
+			nbClassifier.start(CONFIG_FILE_PATH);
 
 			Trainer.train(nbClassifier);
 
-			results[0] = nbClassifier.classify("quick rabbit");
-			results[1] = nbClassifier.classify("quick money");
+			results[0] = nbClassifier.classify(targets[0]);
+			results[1] = nbClassifier.classify(targets[1]);
 
 			nbClassifier.setThresholds("bad", 3.0);
 
-			results[2] = nbClassifier.classify("quick money");
+			results[2] = nbClassifier.classify(targets[2]);
 
 			for (int i = 0; i < 10; i++) {
 				Trainer.train(nbClassifier);
 			}
 
-			results[3] = nbClassifier.classify("quick money");
+			results[3] = nbClassifier.classify(targets[3]);
+			
+			printClassifyResult(targets, results);
 		} catch (InitializeException | OperateException ex) {
 			isFail = true;
 		} finally {
@@ -64,13 +69,16 @@ public class TestDocumentFiltering {
 	@Test
 	public void test_OnlyClassifierOperation() {
 		WordFilterTask task = WordFilterTasks.DEFAULT.getTask();
-		TransactionClassifier classifier = new NaiveBays(task);
-		String result = "";
+		TransactionClassifier classifier = new NaiveBaysClassifier(task);
 		boolean isFail = false;
 		try {
-			classifier.start(PROFILE_PATH);
-			result = classifier.classify("quick rabbit");
+			classifier.start(CONFIG_FILE_PATH);
+			String target = "quick rabbit";
+			String result = classifier.classify("quick rabbit");
+			
 			assertNotNull(result);
+			
+			printClassifyResult(target, result);
 		} catch (InitializeException | ClassifyException ce) {
 			isFail = true;
 		} finally {
@@ -85,22 +93,27 @@ public class TestDocumentFiltering {
 		TransactionClassifier fishClassifier = new FisherClassifier(task);
 		boolean isFail = false;
 
+		String[] targets = new String[]{
+			"quick rabbit", "quick money", "quick money", "quick money"
+		};
 		String[] results = new String[4];
 		try {
-			fishClassifier.start(PROFILE_PATH);
+			fishClassifier.start(CONFIG_FILE_PATH);
 
 			Trainer.train(fishClassifier);
 
-			results[0] = fishClassifier.classify("quick rabbit");
-			results[1] = fishClassifier.classify("quick money");
+			results[0] = fishClassifier.classify(targets[0]);
+			results[1] = fishClassifier.classify(targets[1]);
 
 			fishClassifier.setThresholds("bad", 0.8);
 
-			results[2] = fishClassifier.classify("quick money");
+			results[2] = fishClassifier.classify(targets[2]);
 
 			fishClassifier.setThresholds("good", 0.4);
 
-			results[3] = fishClassifier.classify("quick money");
+			results[3] = fishClassifier.classify(targets[3]);
+			
+			printClassifyResult(targets, results);
 		} catch (InitializeException | OperateException ex) {
 			isFail = true;
 		} finally {
@@ -113,12 +126,12 @@ public class TestDocumentFiltering {
 	public void trainMultiByteSample() {
 		WordFilterTask task = WordFilterTasks.JP.getTask();
 
-		TransactionClassifier nbClassifier = new NaiveBays(task);
+		TransactionClassifier nbClassifier = new NaiveBaysClassifier(task);
 
 		boolean isFail = false;
 
 		try {
-			nbClassifier.start(PROFILE_PATH);
+			nbClassifier.start(CONFIG_FILE_PATH);
 
 			String base = "./test/test/org/geese/ci/classifier/sample";
 
@@ -146,5 +159,15 @@ public class TestDocumentFiltering {
 		Map<String, Integer> result = customTask.get(sample);
 
 		assertTrue(result.get("the") == 2);
+	}
+
+	private void printClassifyResult(String target, String result) {
+		System.out.println("classify "+ target + " to [" + result + "]");
+	}
+	
+	private void printClassifyResult(String[] targets, String[] results) {
+		for(int i = 0, len = targets.length; i < len; i++){
+			printClassifyResult(targets[i], results[i]);
+		}
 	}
 }

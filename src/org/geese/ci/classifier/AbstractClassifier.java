@@ -63,6 +63,8 @@ public abstract class AbstractClassifier implements TransactionClassifier {
 	 */
 	@Override
 	public void start(String configPath) throws InitializeException {
+		String classifierName = this.getName();
+		
 		appProfile = new Profile(configPath);
 		dbType = appProfile.getDatabaseTypeName();
 
@@ -70,6 +72,7 @@ public abstract class AbstractClassifier implements TransactionClassifier {
 			DBAccess dba = DBAccessFactory.create(appProfile);
 			con = dba.connect();
 			con.init();
+			Logging.info(classifierName + " operation started.");
 		} catch (SQLException ex) {
 			Logging.error(appProfile.toLocalize("error.start"), ex);
 			throw new DatabaseInitializeException(dbType, ex);
@@ -190,16 +193,24 @@ public abstract class AbstractClassifier implements TransactionClassifier {
 
 	@Override
 	public void end(boolean fail) {
-		try (ClassifierConnection _con = con) {
+		String classifierName = this.getName();
+		
+		try (ClassifierConnection connection = con) {
 			if (!fail) {
-				_con.commit();
-				Logging.info("Classfier finished.");
+				connection.commit();
+				Logging.info(classifierName + " operation finished.");
 			} else {
-				_con.rollback();
-				Logging.info("Classifier operation failed and rollbacked.");
+				connection.rollback();
+				Logging.info(classifierName + " operation failed and rollbacked.");
 			}
 		} catch (SQLException ex) {
-			Logging.error("Fail to update trainning data and close connection... : " + ex.getMessage());
+			Logging.error(classifierName + " failed trainning and close connection.");
+			Logging.error(ex.getMessage());
 		}
+	}
+	
+	@Override
+	public String getName() {
+		return this.getClass().getSimpleName();
 	}
 }

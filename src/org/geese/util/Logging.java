@@ -6,7 +6,7 @@ public class Logging {
 
 	private static final Logger logger;
 	private static final String LOG_SEPARATOR = ":";
-
+	
 	static {
 		logger = Logger.getLogger(Logging.class.getName());
 	}
