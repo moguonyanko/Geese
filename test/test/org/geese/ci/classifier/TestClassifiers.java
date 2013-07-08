@@ -20,6 +20,7 @@ import org.geese.ci.classifier.filter.WordFilter;
 import org.geese.ci.classifier.filter.WordFilterTask;
 import org.geese.ci.classifier.filter.WordFilterTasks;
 import org.geese.ci.classifier.Trainer;
+import org.geese.ci.classifier.Trainers;
 
 public class TestClassifiers {
 
@@ -42,7 +43,8 @@ public class TestClassifiers {
 		try {
 			nbClassifier.start(CONFIG_FILE_PATH);
 
-			Trainer.train(nbClassifier);
+			Trainer trainer = Trainers.newTrainer();
+			trainer.train(nbClassifier);
 
 			results[0] = nbClassifier.classify(targets[0]);
 			results[1] = nbClassifier.classify(targets[1]);
@@ -52,7 +54,7 @@ public class TestClassifiers {
 			results[2] = nbClassifier.classify(targets[2]);
 
 			for (int i = 0; i < 10; i++) {
-				Trainer.train(nbClassifier);
+				trainer.train(nbClassifier);
 			}
 
 			results[3] = nbClassifier.classify(targets[3]);
@@ -100,7 +102,8 @@ public class TestClassifiers {
 		try {
 			fishClassifier.start(CONFIG_FILE_PATH);
 
-			Trainer.train(fishClassifier);
+			Trainer trainer = Trainers.newTrainer();
+			trainer.train(fishClassifier);
 
 			results[0] = fishClassifier.classify(targets[0]);
 			results[1] = fishClassifier.classify(targets[1]);
@@ -136,10 +139,12 @@ public class TestClassifiers {
 			String base = "./test/test/org/geese/ci/classifier/sample";
 
 			String badFilePath = base + "/bad/sample0.txt";
-			Trainer.train(nbClassifier, "bad", badFilePath);
+			Trainer trainer = Trainers.newTrainer();
+			
+			trainer.train(nbClassifier, "bad", badFilePath);
 
 			String goodFilePath = base + "/good/sample0.txt";
-			Trainer.train(nbClassifier, "good", goodFilePath);
+			trainer.train(nbClassifier, "good", goodFilePath);
 
 		} catch (InitializeException | TrainException ex) {
 			isFail = true;
