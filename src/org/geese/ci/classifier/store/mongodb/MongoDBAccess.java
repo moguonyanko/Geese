@@ -1,4 +1,4 @@
-package org.geese.ci.classifier.db.mongodb;
+package org.geese.ci.classifier.store.mongodb;
 
 import java.net.UnknownHostException;
 import java.sql.ClientInfoStatus;
@@ -8,17 +8,17 @@ import java.util.Map;
 
 import com.mongodb.Mongo;
 
-import org.geese.ci.classifier.db.ClassifierConnection;
-import org.geese.ci.classifier.db.DBAccess;
+import org.geese.ci.classifier.store.ClassifierConnection;
+import org.geese.ci.classifier.store.StoreAccess;
 import org.geese.config.Profile;
 
 /**
  * NOSQL access data.
  * 
  */
-public class MongoDBAccess implements DBAccess {
+public class MongoDBAccess implements StoreAccess {
 
-	public static final String DATABASE_NAME = "MongoDB";
+	public static final String STORE_NAME = "MongoDB";
 	
 	private final String hostname;
 	private final int port;
@@ -26,12 +26,12 @@ public class MongoDBAccess implements DBAccess {
 
 	public MongoDBAccess(Profile profile) {
 		this.profile = profile;
-		hostname = profile.getDatabaseHost();
-		port = profile.getDatabasePort();
+		hostname = profile.getHost();
+		port = profile.getPort();
 	}
 
 	@Override
-	public ClassifierConnection connect() throws SQLClientInfoException {
+	public ClassifierConnection open() throws SQLClientInfoException {
 		
 		Mongo con;
 		

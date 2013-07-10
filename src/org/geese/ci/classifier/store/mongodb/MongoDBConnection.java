@@ -1,9 +1,9 @@
-package org.geese.ci.classifier.db.mongodb;
+package org.geese.ci.classifier.store.mongodb;
 
 import com.mongodb.Mongo;
 import com.mongodb.DB;
 
-import org.geese.ci.classifier.db.ClassifierConnection;
+import org.geese.ci.classifier.store.ClassifierConnection;
 import org.geese.config.Profile;
 
 public class MongoDBConnection implements ClassifierConnection{
@@ -16,7 +16,7 @@ public class MongoDBConnection implements ClassifierConnection{
 	public MongoDBConnection(Mongo conn, Profile profile) {
 		this.conn = conn;
 		this.profile = profile;
-		String dbName = profile.getDatabaseName();
+		String dbName = profile.getStoreName();
 		db = conn.getDB(dbName);
 	}
 	

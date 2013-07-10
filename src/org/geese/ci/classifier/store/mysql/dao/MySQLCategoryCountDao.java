@@ -1,4 +1,4 @@
-package org.geese.ci.classifier.db.mysql.dao;
+package org.geese.ci.classifier.store.mysql.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.geese.ci.classifier.Category;
-import org.geese.ci.classifier.db.StoreDef;
-import org.geese.ci.classifier.db.StoreElementDef;
-import org.geese.ci.classifier.db.dao.CategoryCountDao;
-import org.geese.ci.classifier.db.mysql.MySQLConnection;
+import org.geese.ci.classifier.store.StoreDef;
+import org.geese.ci.classifier.store.StoreElementDef;
+import org.geese.ci.classifier.store.dao.CategoryCountDao;
+import org.geese.ci.classifier.store.mysql.MySQLConnection;
 
 public class MySQLCategoryCountDao implements CategoryCountDao {
 	

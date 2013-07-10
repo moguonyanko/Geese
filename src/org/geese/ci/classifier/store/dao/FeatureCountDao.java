@@ -1,4 +1,4 @@
-package org.geese.ci.classifier.db.dao;
+package org.geese.ci.classifier.store.dao;
 
 import java.sql.SQLException;
 

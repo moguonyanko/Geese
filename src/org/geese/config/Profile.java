@@ -46,28 +46,28 @@ public class Profile {
 		return bundleLocale;
 	}
 
-	public final String getDatabaseTypeName() {
-		return getValue("db.name");
+	public final String getStoreType() {
+		return getValue("store.type");
 	}
 
-	public final int getDatabasePort() {
-		String portValue = getValue("db.port");
+	public final int getPort() {
+		String portValue = getValue("store.port");
 		return Integer.parseInt(portValue);
 	}
 
-	public final String getDatabaseHost() {
-		return getValue("db.host");
+	public final String getHost() {
+		return getValue("store.host");
 	}
 
-	public final String getDatabaseName() {
-		return getValue("db.database");
+	public final String getStoreName() {
+		return getValue("store.name");
 	}
 
-	public final String getDatabaseUserName() {
-		return getValue("db.user");
+	public final String getStoreUser() {
+		return getValue("store.user");
 	}
 
-	public final String getDatabaseUserPassword() {
-		return getValue("db.password");
+	public final String getStorePassword() {
+		return getValue("store.password");
 	}
 }

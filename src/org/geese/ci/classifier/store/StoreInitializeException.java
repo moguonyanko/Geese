@@ -1,12 +1,12 @@
-package org.geese.ci.classifier.db;
+package org.geese.ci.classifier.store;
 
 import org.geese.ci.classifier.InitializeException;
 
-public class DatabaseInitializeException extends InitializeException{
+public class StoreInitializeException extends InitializeException{
 
 	private final String errorDatabaseName;
 
-	public DatabaseInitializeException(String errorDatabaseName, Throwable cause) {
+	public StoreInitializeException(String errorDatabaseName, Throwable cause) {
 		super(cause);
 		this.errorDatabaseName = errorDatabaseName;
 	}

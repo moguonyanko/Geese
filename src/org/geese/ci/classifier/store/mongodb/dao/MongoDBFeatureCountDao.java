@@ -1,4 +1,4 @@
-package org.geese.ci.classifier.db.mongodb.dao;
+package org.geese.ci.classifier.store.mongodb.dao;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.CommandResult;
@@ -8,10 +8,10 @@ import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 
 import org.geese.ci.classifier.Feature;
-import org.geese.ci.classifier.db.StoreDef;
-import org.geese.ci.classifier.db.StoreElementDef;
-import org.geese.ci.classifier.db.dao.FeatureCountDao;
-import org.geese.ci.classifier.db.mongodb.MongoDBConnection;
+import org.geese.ci.classifier.store.StoreDef;
+import org.geese.ci.classifier.store.StoreElementDef;
+import org.geese.ci.classifier.store.dao.FeatureCountDao;
+import org.geese.ci.classifier.store.mongodb.MongoDBConnection;
 
 public class MongoDBFeatureCountDao implements FeatureCountDao {
 	

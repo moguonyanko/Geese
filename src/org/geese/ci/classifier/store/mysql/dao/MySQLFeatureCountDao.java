@@ -1,14 +1,14 @@
-package org.geese.ci.classifier.db.mysql.dao;
+package org.geese.ci.classifier.store.mysql.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.geese.ci.classifier.Feature;
-import org.geese.ci.classifier.db.StoreDef;
-import org.geese.ci.classifier.db.StoreElementDef;
-import org.geese.ci.classifier.db.dao.FeatureCountDao;
-import org.geese.ci.classifier.db.mysql.MySQLConnection;
+import org.geese.ci.classifier.store.StoreDef;
+import org.geese.ci.classifier.store.StoreElementDef;
+import org.geese.ci.classifier.store.dao.FeatureCountDao;
+import org.geese.ci.classifier.store.mysql.MySQLConnection;
 
 public class MySQLFeatureCountDao implements FeatureCountDao {
 

@@ -1,11 +1,11 @@
-package org.geese.ci.classifier.db.mysql;
+package org.geese.ci.classifier.store.mysql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import org.geese.ci.classifier.db.ClassifierConnection;
-import org.geese.ci.classifier.db.StatementProvider;
+import org.geese.ci.classifier.store.ClassifierConnection;
+import org.geese.ci.classifier.store.StatementProvider;
 import org.geese.config.Profile;
 
 

@@ -3,13 +3,13 @@ package org.geese.ci.classifier;
 import java.sql.SQLException;
 import java.util.*;
 
-import org.geese.ci.classifier.db.ClassifierConnection;
-import org.geese.ci.classifier.db.DBAccess;
-import org.geese.ci.classifier.db.DBAccessFactory;
-import org.geese.ci.classifier.db.DatabaseInitializeException;
-import org.geese.ci.classifier.db.dao.DaoFactory;
-import org.geese.ci.classifier.db.dao.FeatureCountDao;
-import org.geese.ci.classifier.db.dao.CategoryCountDao;
+import org.geese.ci.classifier.store.ClassifierConnection;
+import org.geese.ci.classifier.store.StoreAccess;
+import org.geese.ci.classifier.store.StoreAccessFactory;
+import org.geese.ci.classifier.store.StoreInitializeException;
+import org.geese.ci.classifier.store.dao.DaoFactory;
+import org.geese.ci.classifier.store.dao.FeatureCountDao;
+import org.geese.ci.classifier.store.dao.CategoryCountDao;
 import org.geese.ci.classifier.filter.WordFilterTask;
 import org.geese.ci.classifier.probability.WordProbability;
 import org.geese.config.Profile;
@@ -66,16 +66,16 @@ public abstract class AbstractClassifier implements TransactionClassifier {
 		String classifierName = this.getName();
 		
 		appProfile = new Profile(configPath);
-		dbType = appProfile.getDatabaseTypeName();
+		dbType = appProfile.getStoreType();
 
 		try {
-			DBAccess dba = DBAccessFactory.create(appProfile);
-			con = dba.connect();
+			StoreAccess dba = StoreAccessFactory.create(appProfile);
+			con = dba.open();
 			con.init();
 			Logging.info(classifierName + " operation started.");
 		} catch (SQLException ex) {
 			Logging.error(appProfile.toLocalize("error.start"), ex);
-			throw new DatabaseInitializeException(dbType, ex);
+			throw new StoreInitializeException(dbType, ex);
 		}
 	}
 

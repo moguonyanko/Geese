@@ -1,4 +1,4 @@
-package org.geese.ci.classifier.db;
+package org.geese.ci.classifier.store;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

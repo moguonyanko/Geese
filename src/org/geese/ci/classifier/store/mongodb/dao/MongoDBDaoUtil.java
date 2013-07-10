@@ -1,4 +1,4 @@
-package org.geese.ci.classifier.db.mongodb.dao;
+package org.geese.ci.classifier.store.mongodb.dao;
 
 import org.geese.ci.classifier.Category;
 import org.geese.ci.classifier.Feature;
