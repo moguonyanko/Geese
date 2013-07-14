@@ -1,6 +1,8 @@
 package org.geese.config;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -69,5 +71,12 @@ public class Profile {
 
 	public final String getStorePassword() {
 		return getValue("store.password");
+	}
+
+	public final Path getPath() {
+		String pathParam = getValue("store.path");
+		Path path = Paths.get(pathParam);
+
+		return path;
 	}
 }

@@ -1,6 +1,6 @@
 package org.geese.ci.classifier.store.posix;
 
-import java.sql.SQLException;
+import java.nio.file.Path;
 
 import org.geese.ci.classifier.store.ClassifierConnection;
 import org.geese.ci.classifier.store.StoreAccess;
@@ -15,8 +15,10 @@ public class PosixAccess implements StoreAccess {
 	}
 	
 	@Override
-	public ClassifierConnection open() throws SQLException {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	public ClassifierConnection open() {
+		Path path = profile.getPath();
+		ClassifierConnection con = new PosixConnection(path, profile);
+		return con;
 	}
 	
 }
