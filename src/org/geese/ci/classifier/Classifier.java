@@ -1,6 +1,6 @@
 package org.geese.ci.classifier;
 
-public interface Classifier {
+public interface Classifier extends AutoCloseable{
 
 	String classify(String word) throws ClassifyException;
 
@@ -13,4 +13,7 @@ public interface Classifier {
 	double prob(String word, String categoryName) throws ClassifyException;
 	
 	String getName();
+	
+	@Override
+	void close();
 }

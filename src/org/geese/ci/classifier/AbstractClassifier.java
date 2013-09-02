@@ -1,5 +1,6 @@
 package org.geese.ci.classifier;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -43,7 +44,7 @@ public abstract class AbstractClassifier implements TransactionClassifier {
 	private String dbType;
 	protected Profile appProfile;
 	private ClassifierConnection con;
-
+	
 	public AbstractClassifier(WordFilterTask task) {
 		this(task, "unknown");
 	}
@@ -64,7 +65,7 @@ public abstract class AbstractClassifier implements TransactionClassifier {
 	@Override
 	public void start(String configPath) throws InitializeException {
 		String classifierName = this.getName();
-		
+
 		appProfile = new Profile(configPath);
 		dbType = appProfile.getStoreType();
 
@@ -73,7 +74,7 @@ public abstract class AbstractClassifier implements TransactionClassifier {
 			con = dba.open();
 			con.init();
 			Logging.info(classifierName + " operation started.");
-		} catch (SQLException ex) {
+		} catch (SQLException | IOException ex) {
 			Logging.error(appProfile.toLocalize("error.start"), ex);
 			throw new StoreInitializeException(dbType, ex);
 		}
@@ -188,13 +189,12 @@ public abstract class AbstractClassifier implements TransactionClassifier {
 			Logging.error(sqle);
 			throw new TrainException(word, category, "Fail training.");
 		}
-
 	}
-
+	
 	@Override
 	public void end(boolean fail) {
 		String classifierName = this.getName();
-		
+
 		try (ClassifierConnection connection = con) {
 			if (!fail) {
 				connection.commit();
@@ -203,14 +203,19 @@ public abstract class AbstractClassifier implements TransactionClassifier {
 				connection.rollback();
 				Logging.info(classifierName + " operation failed and rollbacked.");
 			}
-		} catch (SQLException ex) {
+		} catch (IOException | SQLException ex) {
 			Logging.error(classifierName + " failed trainning and close connection.");
 			Logging.error(ex.getMessage());
 		}
 	}
-	
+
 	@Override
 	public String getName() {
 		return this.getClass().getSimpleName();
+	}
+
+	@Override
+	public void close() {
+		end(false);
 	}
 }
